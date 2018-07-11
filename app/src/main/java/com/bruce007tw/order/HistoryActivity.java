@@ -6,17 +6,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
 
     private BottomNavigationView bottom_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_history);
         getSupportActionBar().hide();
 
         bottom_bar = findViewById(R.id.bottom_bar);
@@ -24,11 +22,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.action_order :
-                        startActivity(new Intent(MainActivity.this, MenuActivity.class));
-                        break;
-                    case R.id.action_history :
-                        startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                    case R.id.action_main :
+                        startActivity(new Intent(HistoryActivity.this, MainActivity.class));
                         break;
                 }
                 finish();
