@@ -10,9 +10,9 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@android:color/holo_blue_light"
-        android:gravity="center_vertical|center_horizontal"
+        android:layout_height="75dp"
+        android:background="#33b5e5"
+        android:gravity="top|center_horizontal"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
