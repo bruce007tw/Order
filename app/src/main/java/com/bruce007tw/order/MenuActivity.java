@@ -1,16 +1,18 @@
 package com.bruce007tw.order;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
@@ -19,16 +21,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
+    private static final String TAG = "MenuActivity";
 
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
+    private ArrayList<String> mfoodName = new ArrayList<>();
+    private ArrayList<String> mfoodPicUrl = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         getSupportActionBar().hide();
+        Log.d(TAG, "onCreate: Activity啟動.");
+        stepView();
+        bottomBar();
+        recyclerTest();
+    }
 
+    private void stepView() {
         step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
         StepBean stepBean0 = new StepBean("選擇",0);
@@ -50,7 +61,9 @@ public class MenuActivity extends AppCompatActivity {
                 .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.complted)) //設置StepsViewIndicator CompleteIcon
                 .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.default_icon)) //設置StepsViewIndicator DefaultIcon
                 .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.attention)); //設置StepsViewIndicator AttentionIcon
+    }
 
+    private void bottomBar() {
         bottom_bar = findViewById(R.id.bottom_bar);
         bottom_bar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -60,13 +73,54 @@ public class MenuActivity extends AppCompatActivity {
                         startActivity(new Intent(MenuActivity.this, CartActivity.class));
                         break;
                     case R.id.action_main :
-                        startActivity(new Intent(MenuActivity.this, MainActivity.class));
+                        AlertDialog dialog = null;
+                        AlertDialog.Builder builder = null;
+                        builder = new AlertDialog.Builder(MenuActivity.this);
+                        builder.setTitle("警告")
+                                .setMessage("點餐尚未完成，確定離開?")
+                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        startActivity(new Intent(MenuActivity.this, MainActivity.class));
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                    }
+                                }).show();
                         break;
                 }
-                finish();
+                //finish();
                 return true;
             }
         });
     }
 
+    private void recyclerTest() {
+        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
+        mfoodName.add("套餐A");
+
+        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
+        mfoodName.add("套餐B");
+
+        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
+        mfoodName.add("套餐C");
+
+        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
+        mfoodName.add("套餐D");
+
+        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
+        mfoodName.add("套餐E");
+
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        Log.d(TAG, "initRecyclerView: RecyclerView啟動");
+        RecyclerView recyclerView = findViewById(R.id.menuRecyclerView);
+        MenuRecyclerViewAdapter adapter = new MenuRecyclerViewAdapter(this, mfoodName, mfoodPicUrl);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 }
