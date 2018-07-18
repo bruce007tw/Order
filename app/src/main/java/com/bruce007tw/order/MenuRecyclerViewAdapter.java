@@ -69,10 +69,10 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
 
         public ViewHolderMenu(View setView) {
             super(setView);
-            cardLayoutMenu = setView.findViewById(R.id.cardLayoutMenu);
-            cardViewMenu = setView.findViewById(R.id.cardViewMenu);
-            imgMenu = setView.findViewById(R.id.imgMenu);
-            txtMenu = setView.findViewById(R.id.txtMenu);
+            cardViewMenu = setView.findViewById(R.id.menuCardView);
+            cardLayoutMenu = setView.findViewById(R.id.menuCardLayout);
+            imgMenu = setView.findViewById(R.id.menuFoodPic);
+            txtMenu = setView.findViewById(R.id.menuFoodName);
         }
     }
 }

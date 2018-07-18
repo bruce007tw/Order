@@ -1,4 +1,4 @@
-package com.bruce007tw.order;
+package com.bruce007tw.order.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,21 +12,34 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
+import com.bruce007tw.order.Adapters.MenuFirestoreRecyclerAdapter;
+import com.bruce007tw.order.CartActivity;
+import com.bruce007tw.order.DataFields.FoodMenu;
+import com.bruce007tw.order.R;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class MenuActivity extends AppCompatActivity {
     private static final String TAG = "MenuActivity";
+    private static final String FIRE = "Firestore";
 
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
-    private ArrayList<String> mfoodName = new ArrayList<>();
-    private ArrayList<String> mfoodPicUrl = new ArrayList<>();
+    private FirebaseFirestore firestore;
+    private List<FoodMenu> FoodList;
+    private MenuFirestoreRecyclerAdapter menuFirestoreRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +47,55 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
+        firestore();
         stepView();
         bottomBar();
-        recyclerTest();
+    }
+
+    private void firestore() {
+        FoodList = new ArrayList<>();
+        menuFirestoreRecyclerAdapter = new MenuFirestoreRecyclerAdapter(this, FoodList);
+
+        RecyclerView menuRecyclerView = findViewById(R.id.menuRecyclerView);
+        menuRecyclerView.setHasFixedSize(true);
+        menuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        menuRecyclerView.setAdapter(menuFirestoreRecyclerAdapter);
+
+        firestore = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        firestore.setFirestoreSettings(settings);
+
+        firestore.collection("FoodMenu").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d(FIRE, "錯誤：" + e.getMessage());
+                }
+                for (DocumentChange docChange: queryDocumentSnapshots.getDocumentChanges()) {
+                    if (docChange.getType() == DocumentChange.Type.ADDED) {
+                        FoodMenu mFoodMenu = docChange.getDocument().toObject(FoodMenu.class);
+                        FoodList.add(mFoodMenu);
+                        menuFirestoreRecyclerAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
+//        firestore.collection("FoodMenu").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Log.d(FIRE, document.getId() + " => " + document.getData());
+//                    }
+//                }
+//                else {
+//                    Log.w(FIRE, "無法取得資料", task.getException());
+//                }
+//            }
+//        });
     }
 
     private void stepView() {
@@ -91,36 +150,8 @@ public class MenuActivity extends AppCompatActivity {
                                 }).show();
                         break;
                 }
-                //finish();
                 return true;
             }
         });
-    }
-
-    private void recyclerTest() {
-        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
-        mfoodName.add("套餐A");
-
-        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
-        mfoodName.add("套餐B");
-
-        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
-        mfoodName.add("套餐C");
-
-        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
-        mfoodName.add("套餐D");
-
-        mfoodPicUrl.add("https://www.mcdonalds.com/content/dam/usa/documents/mcdelivery/mcdelivery_new11.jpg");
-        mfoodName.add("套餐E");
-
-        initRecyclerView();
-    }
-
-    private void initRecyclerView() {
-        Log.d(TAG, "initRecyclerView: RecyclerView啟動");
-        RecyclerView recyclerView = findViewById(R.id.menuRecyclerView);
-        MenuRecyclerViewAdapter adapter = new MenuRecyclerViewAdapter(this, mfoodName, mfoodPicUrl);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
