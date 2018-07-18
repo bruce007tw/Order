@@ -1,6 +1,7 @@
 package com.bruce007tw.order.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bruce007tw.order.Activities.FoodDetail;
+import com.bruce007tw.order.Activities.MenuActivity;
 import com.bruce007tw.order.DataFields.FoodMenu;
 import com.bruce007tw.order.GlideApp;
 import com.bruce007tw.order.R;
@@ -32,7 +35,7 @@ public class MenuFirestoreRecyclerAdapter extends RecyclerView.Adapter<MenuFires
     @NonNull
     @Override
     public ViewHolderMenu onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.set_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_view, parent, false);
         return new ViewHolderMenu(view);
     }
 
@@ -44,6 +47,9 @@ public class MenuFirestoreRecyclerAdapter extends RecyclerView.Adapter<MenuFires
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "點擊：" + FoodList.get(position).getFoodName());
+                Intent foodDetail = new Intent(mContext, FoodDetail.class);
+                //foodDetail.putExtra("ID",FoodList.get(position).getFoodName());
+
             }
         });
 
@@ -51,7 +57,7 @@ public class MenuFirestoreRecyclerAdapter extends RecyclerView.Adapter<MenuFires
         holder.menuFoodPrice.setText(FoodList.get(position).getFoodPrice());
 
         GlideApp.with(mContext)
-                .asBitmap()
+                //.asBitmap()
                 .load(FoodList.get(position).getFoodPic())
                 .into(holder.menuFoodPic);
     }
