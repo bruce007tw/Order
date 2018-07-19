@@ -8,37 +8,49 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
-import com.bruce007tw.order.Adapters.MenuFirestoreRecyclerAdapter;
+
 import com.bruce007tw.order.CartActivity;
-import com.bruce007tw.order.DataFields.FoodMenu;
+import com.bruce007tw.order.DataFields.FoodFields;
 import com.bruce007tw.order.R;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
+import com.bruce007tw.order.R2;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MenuActivity extends AppCompatActivity {
     private static final String TAG = "MenuActivity";
-    private static final String FIRE = "Firestore";
 
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
     private FirebaseFirestore firestore;
-    private List<FoodMenu> FoodList;
-    private MenuFirestoreRecyclerAdapter menuFirestoreRecyclerAdapter;
+    private FirestoreRecyclerAdapter adapter;
+
+    @BindView(R2.id.menuRecyclerView) RecyclerView menuRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,58 +58,81 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
-        firestore();
-        stepView();
-        bottomBar();
+        ButterKnife.bind(this);
+        init();
+        getFoodList();
+        StepView();
+        BottomBar();
     }
 
-    private void firestore() {
-        FoodList = new ArrayList<>();
-        menuFirestoreRecyclerAdapter = new MenuFirestoreRecyclerAdapter(this, FoodList);
-
-        RecyclerView menuRecyclerView = findViewById(R.id.menuRecyclerView);
-        menuRecyclerView.setHasFixedSize(true);
-        menuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        menuRecyclerView.setAdapter(menuFirestoreRecyclerAdapter);
-
+    private void init() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        menuRecyclerView.setLayoutManager(linearLayoutManager);
         firestore = FirebaseFirestore.getInstance();
-
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        firestore.setFirestoreSettings(settings);
-
-        firestore.collection("FoodMenu").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.d(FIRE, "錯誤：" + e.getMessage());
-                }
-                for (DocumentChange docChange: queryDocumentSnapshots.getDocumentChanges()) {
-                    if (docChange.getType() == DocumentChange.Type.ADDED) {
-                        FoodMenu mFoodMenu = docChange.getDocument().toObject(FoodMenu.class);
-                        FoodList.add(mFoodMenu);
-                        menuFirestoreRecyclerAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
-//        firestore.collection("FoodMenu").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d(FIRE, document.getId() + " => " + document.getData());
-//                    }
-//                }
-//                else {
-//                    Log.w(FIRE, "無法取得資料", task.getException());
-//                }
-//            }
-//        });
     }
 
-    private void stepView() {
+    private void getFoodList() {
+        Query query = firestore.collection("FoodMenu");
+
+        FirestoreRecyclerOptions<FoodFields> foodFields = new FirestoreRecyclerOptions.Builder<FoodFields>()
+                .setQuery(query, FoodFields.class)
+                .build();
+
+        adapter = new FirestoreRecyclerAdapter<FoodFields, FoodHolder>(foodFields) {
+            @Override
+            protected void onBindViewHolder(@NonNull final FoodHolder holder, final int position, @NonNull final FoodFields model) {
+                Log.d(TAG, "呼叫onBindViewHolder");
+
+                Glide.with(getApplicationContext())
+                        .load(model.getFoodPic())
+                        .into(holder.menuFoodPic);
+
+                holder.menuFoodName.setText(model.getFoodName());
+                holder.menuFoodPrice.setText(model.getFoodPrice());
+
+                holder.menuCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "點擊：" + model.getFoodName());
+                        DocumentSnapshot snapshot = getSnapshots().getSnapshot(holder.getAdapterPosition());
+                        Intent foodDetail = new Intent(MenuActivity.this, FoodDetail.class);
+                        foodDetail.putExtra("foodID", snapshot.getId());
+                        startActivity(foodDetail);
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public FoodHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_view, parent, false);
+                return new FoodHolder(view);
+            }
+
+            @Override
+            public void onError(@NonNull FirebaseFirestoreException e) {
+                super.onError(e);
+                Log.e("錯誤：", e.getMessage());
+            }
+        };
+        adapter.notifyDataSetChanged();
+        menuRecyclerView.setAdapter(adapter);
+    }
+
+    public class FoodHolder extends RecyclerView.ViewHolder {
+        @BindView(R2.id.menuCardView) CardView menuCardView;
+        @BindView(R2.id.menuCardLayout) LinearLayout menuCardLayout;
+        @BindView(R2.id.menuFoodPic) ImageView menuFoodPic;
+        @BindView(R2.id.menuFoodName) TextView menuFoodName;
+        @BindView(R2.id.menuFoodPrice) TextView menuFoodPrice;
+
+        public FoodHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    private void StepView() {
         step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
         StepBean stepBean0 = new StepBean("選擇",0);
@@ -121,7 +156,7 @@ public class MenuActivity extends AppCompatActivity {
                 .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.attention)); //設置StepsViewIndicator AttentionIcon
     }
 
-    private void bottomBar() {
+    private void BottomBar() {
         bottom_bar = findViewById(R.id.bottom_bar);
         bottom_bar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -152,5 +187,17 @@ public class MenuActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

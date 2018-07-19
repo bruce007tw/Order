@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Adapters;
+package com.bruce007tw.order;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bruce007tw.order.Activities.FoodDetail;
-import com.bruce007tw.order.Activities.MenuActivity;
-import com.bruce007tw.order.DataFields.FoodMenu;
-import com.bruce007tw.order.GlideApp;
-import com.bruce007tw.order.R;
+import com.bruce007tw.order.DataFields.FoodFields;
 
 import java.util.List;
 
@@ -25,9 +22,9 @@ public class MenuFirestoreRecyclerAdapter extends RecyclerView.Adapter<MenuFires
 
     private static final String TAG = "MenuFirestoreAdapter";
     private Context mContext;
-    private List<FoodMenu> FoodList;
+    private List<FoodFields> FoodList;
 
-    public MenuFirestoreRecyclerAdapter(Context mContext, List<FoodMenu> FoodList) {
+    public MenuFirestoreRecyclerAdapter(Context mContext, List<FoodFields> FoodList) {
         this.mContext = mContext;
         this.FoodList = FoodList;
     }

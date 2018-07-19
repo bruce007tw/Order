@@ -1,17 +1,17 @@
 package com.bruce007tw.order.DataFields;
 
-public class FoodMenu {
+public class FoodFields {
 
-    String foodName, foodPic, foodPrice;
+    String foodName, foodPic, foodPrice, foodDetail;
 
-    public FoodMenu() {
-
+    public FoodFields() {
     }
 
-    public FoodMenu(String foodName, String foodPic, String foodPrice) {
+    public FoodFields(String foodName, String foodPic, String foodPrice, String foodDetail) {
         this.foodName = foodName;
         this.foodPic = foodPic;
         this.foodPrice = foodPrice;
+        this.foodDetail = foodDetail;
     }
 
     public String getFoodName() {
@@ -33,4 +33,8 @@ public class FoodMenu {
     public String getFoodPrice() { return foodPrice; }
 
     public void setFoodPrice(String foodPrice) { this.foodPrice = foodPrice; }
+
+    public String getFoodDetail() { return foodDetail; }
+
+    public void setFoodDetail(String foodDetail) { this.foodDetail = foodDetail; }
 }

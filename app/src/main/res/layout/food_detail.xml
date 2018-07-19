@@ -2,12 +2,13 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detailLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.FoodDetail">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/detailFoodPic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,77 +17,99 @@
         app:srcCompat="@mipmap/mcdelivery_new11" />
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cardView3"
-        android:layout_width="395dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left|center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:orientation="vertical">
-
-            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                android:id="@+id/numberBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:finalNumber="20"
-                app:initialNumber="1"
-                app:textSize="6sp" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:padding="20dp"
-        android:text="加入購物車"
-        android:textSize="18sp"
+        android:id="@+id/detailCardView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+        app:layout_constraintTop_toBottomOf="@+id/detailFoodPic">
 
+        <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/detailConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/detailFoodName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:text="FoodName"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/detailFoodPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="FoodPrice"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/detailFoodName"
+                app:layout_constraintTop_toBottomOf="@+id/detailFoodName" />
+
+            <TextView
+                android:id="@+id/detailDetailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Detail"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/detailFoodPrice"
+                app:layout_constraintTop_toBottomOf="@+id/detailFoodPrice" />
+
+            <TextView
+                android:id="@+id/detailFoodDetail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="10sp"
+                android:text="Favourite meals from worldly cuisines- find the version of a recipe to suit you. Baked potato. Perfect your spud technique then pile our filling ideas high. Burger. Casserole. Chicken salad. Crumble. Curry. Fish pie. Frittata."
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/detailAddBtn"
+                app:layout_constraintEnd_toEndOf="@+id/detailAddBtn"
+                app:layout_constraintStart_toStartOf="@+id/detailDetailTitle"
+                app:layout_constraintTop_toBottomOf="@+id/detailDetailTitle" />
+
+            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                android:id="@+id/detailNumberBtn"
+                android:layout_width="120dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                app:backGroundColor="@color/colorPrimaryDark"
+                app:finalNumber="20"
+                app:initialNumber="1"
+                app:layout_constraintBottom_toBottomOf="@+id/detailFoodPrice"
+                app:layout_constraintEnd_toEndOf="@+id/detailFoodDetail"
+                app:layout_constraintTop_toTopOf="@+id/detailFoodPrice"
+                app:textSize="8sp" />
+
+            <Button
+                android:id="@+id/detailAddBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:padding="18dp"
+                android:text="加入購物車"
+                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>
