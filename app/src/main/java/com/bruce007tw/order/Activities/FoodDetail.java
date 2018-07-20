@@ -16,7 +16,9 @@ import com.bruce007tw.order.R2;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
@@ -25,9 +27,23 @@ import butterknife.ButterKnife;
 public class FoodDetail extends AppCompatActivity {
     private static final String TAG = "FoodDetail";
 
-    private FirebaseFirestore firestore;
-    private CollectionReference collection;
-    private String foodID = "";
+    public static final String KEY_FOOD_ID = "key_food_id";
+
+    @BindView(R2.id.detailFoodPic) ImageView detailFoodPic;
+    @BindView(R2.id.detailCardView) CardView detailCardView;
+    @BindView(R2.id.detailConstraintLayout) ConstraintLayout detailConstraintLayout;
+    @BindView(R2.id.detailFoodName) TextView detailFoodName;
+    @BindView(R2.id.detailFoodPrice) TextView detailFoodPrice;
+    @BindView(R2.id.detailDetailTitle) TextView detailDetailTitle;
+    @BindView(R2.id.detailFoodDetail) TextView detailFoodDetail;
+    @BindView(R2.id.detailNumberBtn) ElegantNumberButton detailNumberBtn;
+    @BindView(R2.id.detailAddBtn) Button detailAddBtn;
+
+    private FirebaseFirestore mFirestore;
+    private DocumentReference mReference;
+    private ListenerRegistration mRegistration;
+    //private CollectionReference collection;
+    //private String foodID = "";
 
 
     @Override
@@ -35,38 +51,36 @@ public class FoodDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_detail);
         getSupportActionBar().hide();
-        init();
-        if (getIntent() != null) {
-            foodID = getIntent().getStringExtra("foodID");
-        }
-        if (!foodID.isEmpty()) {
-            getFoodDetail(foodID);
-        }
+        //init();
+
+        String foodID = getIntent().getExtras().getString(KEY_FOOD_ID);
+        mFirestore = FirebaseFirestore.getInstance();
+        mReference = mFirestore.collection("FoodMenu").document(foodID);
     }
 
-    private void init() {
-        firestore = FirebaseFirestore.getInstance();
-    }
 
-    private void getFoodDetail(String foodID) {
-        Query query = firestore.collection("FoodMenu");
-        collection.getId().
-    }
 
-    public class DetailHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.detailFoodPic) ImageView detailFoodPic;
-        @BindView(R2.id.detailCardView) CardView detailCardView;
-        @BindView(R2.id.detailConstraintLayout) ConstraintLayout detailConstraintLayout;
-        @BindView(R2.id.detailFoodName) TextView detailFoodName;
-        @BindView(R2.id.detailFoodPrice) TextView detailFoodPrice;
-        @BindView(R2.id.detailDetailTitle) TextView detailDetailTitle;
-        @BindView(R2.id.detailFoodDetail) TextView detailFoodDetail;
-        @BindView(R2.id.detailNumberBtn) ElegantNumberButton detailNumberBtn;
-        @BindView(R2.id.detailAddBtn) Button detailAddBtn;
+//    private void init() {
+//        firestore = FirebaseFirestore.getInstance();
+//    }
+//
+//    private void getFoodDetail(String foodID) {
+//    }
 
-        public DetailHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
+//    public class DetailHolder extends RecyclerView.ViewHolder {
+//        @BindView(R2.id.detailFoodPic) ImageView detailFoodPic;
+//        @BindView(R2.id.detailCardView) CardView detailCardView;
+//        @BindView(R2.id.detailConstraintLayout) ConstraintLayout detailConstraintLayout;
+//        @BindView(R2.id.detailFoodName) TextView detailFoodName;
+//        @BindView(R2.id.detailFoodPrice) TextView detailFoodPrice;
+//        @BindView(R2.id.detailDetailTitle) TextView detailDetailTitle;
+//        @BindView(R2.id.detailFoodDetail) TextView detailFoodDetail;
+//        @BindView(R2.id.detailNumberBtn) ElegantNumberButton detailNumberBtn;
+//        @BindView(R2.id.detailAddBtn) Button detailAddBtn;
+//
+//        public DetailHolder(View itemView) {
+//            super(itemView);
+//            ButterKnife.bind(this, itemView);
+//        }
+//    }
 }
