@@ -1,8 +1,9 @@
-package com.bruce007tw.order;
+package com.bruce007tw.order.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bruce007tw.order.Adapters.FirestoreAdapter;
 import com.bruce007tw.order.Model.Foods;
+
+import com.bruce007tw.order.R;
+import com.bruce007tw.order.R2;
 import com.bumptech.glide.Glide;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
@@ -45,21 +49,9 @@ public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.Fo
         final DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
         final Foods foods = documentSnapshot.toObject(Foods.class);
 
-        Glide.with(holder.FoodImage.getContext())
-                .load(foods.getfoodImage())
-                .into(holder.FoodImage);
+        Log.d(TAG, "呼叫 onBindViewHolder");
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onFoodSelected(documentSnapshot);
-                }
-            }
-        });
-
-        holder.FoodName.setText(foods.getFoodName());
-        holder.FoodPrice.setText(foods.getFoodPrice());
+        holder.bind(getSnapshot(position), mListener);
     }
 
     @Override
@@ -69,13 +61,13 @@ public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.Fo
 
     public class FoodHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R2.id.menuCardView)
-        CardView CardView;
+//        @BindView(R2.id.menuCardView)
+//        CardView CardView;
+//
+//        @BindView(R2.id.menuCardLayout)
+//        LinearLayout CardLayout;
 
-        @BindView(R2.id.menuCardLayout)
-        LinearLayout CardLayout;
-
-        @BindView(R2.id.menufoodImage)
+        @BindView(R2.id.menuFoodImage)
         ImageView FoodImage;
 
         @BindView(R2.id.menuFoodName)
@@ -87,6 +79,26 @@ public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.Fo
         public FoodHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bind (final DocumentSnapshot documentSnapshot, final onFoodSelectedListener mListener) {
+            Foods foods = documentSnapshot.toObject(Foods.class);
+
+            Glide.with(FoodImage.getContext())
+                .load(foods.getFoodPic())
+                .into(FoodImage);
+
+            FoodName.setText(foods.getFoodName());
+            FoodPrice.setText(foods.getFoodPrice());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                    mListener.onFoodSelected(documentSnapshot);
+                    }
+                }
+            });
         }
     }
 }

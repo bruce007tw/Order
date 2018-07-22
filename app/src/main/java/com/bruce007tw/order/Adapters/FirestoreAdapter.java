@@ -28,26 +28,6 @@ public abstract class FirestoreAdapter<VH extends RecyclerView.ViewHolder>
         this.mQuery = mQuery;
     }
 
-    public void stopListeningForLiveEvents() {
-        if (mListenerRegistration != null) {
-            mListenerRegistration.remove();
-            mListenerRegistration = null;
-        }
-
-        mDocumentSnapshot.clear();
-        notifyDataSetChanged();
-    }
-
-    public void setQuery(Query query) {
-        stopListeningForLiveEvents();
-        mQuery = query;
-        startListeningForLiveEvents();
-    }
-
-    public void startListeningForLiveEvents() {
-        mListenerRegistration = mQuery.addSnapshotListener(this);
-    }
-
     @Override
     public void onEvent(@Nullable QuerySnapshot mDocumentSnapshot, @Nullable FirebaseFirestoreException e) {
         if (e != null) {
@@ -72,6 +52,36 @@ public abstract class FirestoreAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     public void onEventTriggered() {
+    }
+
+    public void startListening() {
+        if (mQuery != null && mListenerRegistration == null) {
+            mListenerRegistration = mQuery.addSnapshotListener(this);
+        }
+    }
+
+    public void stopListening() {
+        if (mListenerRegistration != null) {
+            mListenerRegistration.remove();
+            mListenerRegistration = null;
+        }
+
+        mDocumentSnapshot.clear();
+        notifyDataSetChanged();
+    }
+
+    public void setQuery(Query query) {
+        stopListening();
+
+        mDocumentSnapshot.clear();
+        notifyDataSetChanged();
+
+        mQuery = query;
+        startListening();
+    }
+
+    protected DocumentSnapshot getSnapshot(int index) {
+        return mDocumentSnapshot.get(index);
     }
 
     private void onDocumentAdded(DocumentChange change) {

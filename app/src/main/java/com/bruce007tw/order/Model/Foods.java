@@ -5,31 +5,46 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Foods {
 
-    private String foodName, foodImage, foodDetail;
-    private int foodPrice;
+    private String foodName, foodPic, foodDetail, foodPrice;
 
     public Foods() {}
 
-    public Foods(String foodName, String foodImage, String foodDetail, int foodPrice) {
+    public Foods(String foodName, String foodPrice, String foodPic, String foodDetail) {
         this.foodName = foodName;
-        this.foodImage = foodImage;
         this.foodPrice = foodPrice;
+        this.foodPic = foodPic;
         this.foodDetail = foodDetail;
     }
 
-    public String getFoodName() { return foodName; }
+    public String getFoodName() {
+        return foodName;
+    }
 
-    public void setFoodName(String foodName) { this.foodName = foodName; }
+    public void setFoodName(String foodName) {
+        this.foodName = foodName;
+    }
 
-    public String getfoodImage() { return foodImage; }
+    public String getFoodPic() {
+        return foodPic;
+    }
 
-    public void setfoodImage(String foodImage) { this.foodImage = foodImage; }
+    public void setFoodPic(String foodPic) {
+        this.foodPic = foodPic;
+    }
 
-    public String getFoodDetail() { return foodDetail; }
+    public String getFoodDetail() {
+        return foodDetail;
+    }
 
-    public void setFoodDetail(String foodDetail) { this.foodDetail = foodDetail; }
+    public void setFoodDetail(String foodDetail) {
+        this.foodDetail = foodDetail;
+    }
 
-    public int getFoodPrice() { return foodPrice; }
+    public String getFoodPrice() {
+        return foodPrice;
+    }
 
-    public void setFoodPrice(int foodPrice) { this.foodPrice = foodPrice; }
+    public void setFoodPrice(String foodPrice) {
+        this.foodPrice = foodPrice;
+    }
 }

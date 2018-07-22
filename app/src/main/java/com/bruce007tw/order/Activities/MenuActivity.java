@@ -8,57 +8,44 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
 
-import com.bruce007tw.order.CartActivity;
-import com.bruce007tw.order.FoodRecyclerAdapter;
-import com.bruce007tw.order.Model.Foods;
+import com.bruce007tw.order.Adapters.FoodRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapter.onFoodSelectedListener{
+public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapter.onFoodSelectedListener {
+
     private static final String TAG = "MenuActivity";
 
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
+
     private FirebaseFirestore mFirestore;
     private FoodRecyclerAdapter mAdapter;
+    //private FirestoreRecyclerAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Query mQuery;
 
-    @BindView(R2.id.menuRecyclerView) RecyclerView menuRecyclerView;
+    @BindView(R2.id.menuRecyclerView)
+    RecyclerView menuRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,51 +56,72 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
         ButterKnife.bind(this);
         //init();
         //getFoodList();
+        Firestore();
         StepView();
         BottomBar();
+    }
 
+    private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        mFirestore.setFirestoreSettings(settings);
+
         mQuery = mFirestore.collection("FoodMenu");
 
-
         mAdapter = new FoodRecyclerAdapter(mQuery, this) {
-            @Override
-            public void onEventTriggered() {
-                super.onEventTriggered();
-            }
         };
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         menuRecyclerView.setLayoutManager(mLinearLayoutManager);
         menuRecyclerView.setAdapter(mAdapter);
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mAdapter != null) {
+            mAdapter.startListening();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAdapter != null) {
+            mAdapter.stopListening();
+        }
     }
 
     @Override
     public void onFoodSelected(DocumentSnapshot firebaseFood) {
-
+        Intent intent = new Intent(this, FoodDetail.class);
+        intent.putExtra(FoodDetail.KEY_FOOD_ID, firebaseFood.getId());
+        startActivity(intent);
     }
 
-    //    private void init() {
+//    private void init() {
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 //        menuRecyclerView.setLayoutManager(linearLayoutManager);
-//        firestore = FirebaseFirestore.getInstance();
+//        mFirestore = FirebaseFirestore.getInstance();
 //    }
 //
 //    private void getFoodList() {
-//        Query query = firestore.collection("FoodMenu");
+//        Query query = mFirestore.collection("FoodMenu");
 //
-//        FirestoreRecyclerOptions<Foods> foodFields = new FirestoreRecyclerOptions.Builder<Foods>()
+//        FirestoreRecyclerOptions<Foods> foods = new FirestoreRecyclerOptions.Builder<Foods>()
 //                .setQuery(query, Foods.class)
 //                .build();
 //
-//        adapter = new FoodRecyclerAdapter<Foods, FoodHolder>(foodFields) {
+//        mAdapter = new FirestoreRecyclerAdapter<Foods, FoodHolder>(foods) {
 //            @Override
-//            protected void onBindViewHolder(@NonNull final FoodHolder holder, final int position, @NonNull final Foods model) {
+//            public void onBindViewHolder(@NonNull FoodHolder holder, int position, @NonNull Foods model) {
 //                Log.d(TAG, "呼叫onBindViewHolder");
 //
 //                Glide.with(getApplicationContext())
-//                        .load(model.getfoodImage())
+//                        .load(model.getFoodPic())
 //                        .into(holder.menuFoodPic);
 //
 //                holder.menuFoodName.setText(model.getFoodName());
@@ -144,8 +152,8 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
 //                Log.e("錯誤：", e.getMessage());
 //            }
 //        };
-//        adapter.notifyDataSetChanged();
-//        menuRecyclerView.setAdapter(adapter);
+//        mAdapter.notifyDataSetChanged();
+//        menuRecyclerView.setAdapter(mAdapter);
 //    }
 //
 //    public class FoodHolder extends RecyclerView.ViewHolder {
@@ -159,6 +167,18 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
 //            super(itemView);
 //            ButterKnife.bind(this, itemView);
 //        }
+//    }
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        mAdapter.startListening();
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        mAdapter.stopListening();
 //    }
 
     private void StepView() {
@@ -174,15 +194,31 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
         stepsBeanList.add(stepBean3);
 
         step_view
-                .setStepViewTexts(stepsBeanList) //總步驟
-                .setTextSize(14) //set textSize
-                .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(MenuActivity.this, android.R.color.white)) //設置StepsViewIndicator完成線的顏色
-                .setStepsViewIndicatorUnCompletedLineColor(ContextCompat.getColor(MenuActivity.this, R.color.uncompleted_text_color)) //設置StepsViewIndicator未完成線的顏色
-                .setStepViewComplectedTextColor(ContextCompat.getColor(MenuActivity.this, android.R.color.white)) //設置StepsView text完成線的顏色
-                .setStepViewUnComplectedTextColor(ContextCompat.getColor(MenuActivity.this, R.color.uncompleted_text_color)) //設置StepsView text未完成線的顏色
-                .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.complted)) //設置StepsViewIndicator CompleteIcon
-                .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.default_icon)) //設置StepsViewIndicator DefaultIcon
-                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.attention)); //設置StepsViewIndicator AttentionIcon
+                .setTextSize(14)
+
+                //總步驟
+                .setStepViewTexts(stepsBeanList)
+
+                //設置StepsViewIndicator完成線的顏色
+                .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(MenuActivity.this, android.R.color.white))
+
+                //設置StepsViewIndicator未完成線的顏色
+                .setStepsViewIndicatorUnCompletedLineColor(ContextCompat.getColor(MenuActivity.this, R.color.uncompleted_text_color))
+
+                //設置StepsView text完成線的顏色
+                .setStepViewComplectedTextColor(ContextCompat.getColor(MenuActivity.this, android.R.color.white))
+
+                //設置StepsView text未完成線的顏色
+                .setStepViewUnComplectedTextColor(ContextCompat.getColor(MenuActivity.this, R.color.uncompleted_text_color))
+
+                //設置StepsViewIndicator CompleteIcon
+                .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.complted))
+
+                //設置StepsViewIndicator DefaultIcon
+                .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.default_icon))
+
+                //設置StepsViewIndicator AttentionIcon
+                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(MenuActivity.this, R.drawable.attention));
     }
 
     private void BottomBar() {
