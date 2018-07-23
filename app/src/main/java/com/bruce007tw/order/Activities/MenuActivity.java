@@ -242,7 +242,6 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                                     @Override
                                     public void onClick(DialogInterface dialog, int i) {
 
-                                        //OrderEntity orderEntity = new OrderEntity();
                                         OrderDatabase orderDatabase = OrderDatabase.getDatabase(MenuActivity.this);
                                         orderDatabase.orderDao().nukeTable();
 
