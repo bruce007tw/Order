@@ -20,6 +20,10 @@ import com.bruce007tw.order.FillActivity;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
+import com.bruce007tw.order.Room.OrderDao;
+import com.bruce007tw.order.Room.OrderDatabase;
+import com.bruce007tw.order.Room.OrderEntity;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CartActivity extends AppCompatActivity implements CartRecyclerAdapter.onCartSelectedListener {
+public class CartActivity extends AppCompatActivity {
 
     private static final String TAG = "CartActivity";
 
@@ -41,13 +45,17 @@ public class CartActivity extends AppCompatActivity implements CartRecyclerAdapt
     private BottomNavigationView bottom_bar;
 
     private FirebaseFirestore mFirestore;
-    private DocumentReference mReference;
+    private CollectionReference mReference;
     private ListenerRegistration mRegistration;
     private CartRecyclerAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Query mQuery;
 
     private Boolean isCartEmpty = true;
+
+    private List<OrderEntity> orderEntityList = new ArrayList<>();
+    private OrderDao orderDao;
+
 
 
     @BindView(R2.id.cartRecyclerView)
@@ -60,6 +68,8 @@ public class CartActivity extends AppCompatActivity implements CartRecyclerAdapt
         getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
+        Firestore();
+        selectedFood();
         stepView();
         bottomBar();
     }
@@ -67,6 +77,7 @@ public class CartActivity extends AppCompatActivity implements CartRecyclerAdapt
 
     private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
+        mReference = mFirestore.collection("FoodMenu");
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
@@ -75,16 +86,19 @@ public class CartActivity extends AppCompatActivity implements CartRecyclerAdapt
 
         mQuery = mFirestore.collection("FoodMenu");
 
-        mAdapter = new CartRecyclerAdapter(mQuery,this) {
-        };
+//        mAdapter = new CartRecyclerAdapter(mQuery,this) {
+//        };
 
+        cartRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
         cartRecyclerView.setLayoutManager(mLinearLayoutManager);
-        cartRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onCartSelected(DocumentSnapshot firebaseFood) {
+    private void selectedFood() {
+        OrderDatabase orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
+        orderEntityList = orderDatabase.orderDao().getAll();
+        mAdapter = new CartRecyclerAdapter(orderEntityList, this);
+        cartRecyclerView.setAdapter(mAdapter);
     }
 
     private void stepView() {

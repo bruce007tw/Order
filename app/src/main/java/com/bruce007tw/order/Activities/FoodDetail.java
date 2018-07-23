@@ -14,10 +14,14 @@ import com.bruce007tw.order.Model.Foods;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
+import com.bruce007tw.order.Room.OrderDao;
+import com.bruce007tw.order.Room.OrderDatabase;
+import com.bruce007tw.order.Room.OrderEntity;
 import com.bumptech.glide.Glide;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
+import com.google.api.LogDescriptor;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -30,6 +34,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -74,6 +79,8 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
     private DocumentReference mReference;
     private ListenerRegistration mRegistration;
     private Query mQuery;
+    private String foodID;
+    private Foods currentFood;
 
     private Boolean isCartEmpty, isItemAlreadyInCart = false;
     int indexOfAlreadyPresentItem = -1;
@@ -84,9 +91,11 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
         setContentView(R.layout.food_detail);
         getSupportActionBar().hide();
         ButterKnife.bind(this);
+        AddToCart();
         //init();
 
-        String foodID = getIntent().getExtras().getString(KEY_FOOD_ID);
+        foodID = getIntent().getExtras().getString(KEY_FOOD_ID);
+        Log.d(TAG, "foodID：" + getIntent().getExtras().getString(KEY_FOOD_ID));
         mFirestore = FirebaseFirestore.getInstance();
         mReference = mFirestore.collection("FoodMenu").document(foodID);
     }
@@ -121,60 +130,31 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
     }
 
     private void LoadFoodDetail(DocumentSnapshot documentSnapshot) {
-        Foods foods = documentSnapshot.toObject(Foods.class);
+        currentFood = documentSnapshot.toObject(Foods.class);
 
         Glide.with(this)
-                .load(foods.getFoodPic())
+                .load(currentFood.getFoodPic())
                 .into(detailFoodPic);
-        Log.d(TAG, "圖片載入：" + foods.getFoodPic());
+        Log.d(TAG, "圖片：" + currentFood.getFoodPic());
 
-        detailFoodName.setText(foods.getFoodName());
-        detailFoodPrice.setText(foods.getFoodPrice());
-        detailFoodDetail.setText(foods.getFoodDetail());
+        detailFoodName.setText(currentFood.getFoodName());
+        detailFoodPrice.setText(currentFood.getFoodPrice());
+        detailFoodDetail.setText(currentFood.getFoodDetail());
     }
 
-    private void AddToCart (final DocumentSnapshot documentSnapshot) {
+    private void AddToCart () {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isCartEmpty){
-
-                    int tempIndex = 0;
-
-                    //for (DataSnapshot snapshot : dataSnapshot.child("cartItems").getChildren()){
-
-                    String foodID = getIntent().getExtras().getString(KEY_FOOD_ID);
-
-                        if (foodID == documentSnapshot.getId()){
-                            isItemAlreadyInCart = true;
-                            indexOfAlreadyPresentItem = tempIndex;
-                        }
-
-                    LoadFoodDetail(documentSnapshot);
-
-                        tempIndex++;
-                }
-                if(isCartEmpty){
-                    cartItems = new ArrayList<>();
-                    Map<String, Object> cartState = new HashMap<>();
-                    cartState.put("isCartEmpty", Boolean.FALSE);
-                    myRef.updateChildren(cartState);
-                }
-
-                if (isItemAlreadyInCart){
-                    cartItems.get(indexOfAlreadyPresentItem)
-                            .setQuantity(cartItems.get(indexOfAlreadyPresentItem).getQuantity() + quantity);
-                }
-                else {
-                    item.setQuantity(quantity);
-                    cartItems.add(item);
-                }
-
-                Map<String, Object> cartItemsMap = new HashMap<>();
-                cartItemsMap.put("cartItems", cartItems);
-
-                myRef.updateChildren(cartItemsMap);
-            };
+                OrderEntity orderEntity = new OrderEntity(Integer.parseInt(foodID),
+                        currentFood.getFoodName(),
+                        currentFood.getFoodPic(),
+                        currentFood.getFoodPrice(),
+                        currentFood.getFoodDetail(),
+                        3);
+                OrderDatabase.getDatabase(getApplicationContext()).orderDao().addOrder(orderEntity);
+                Log.d(TAG, "購物車：" + orderEntity);
+            }
         });
     }
 }

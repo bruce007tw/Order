@@ -20,6 +20,8 @@ import com.bruce007tw.order.Adapters.FoodRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
+import com.bruce007tw.order.Room.OrderDatabase;
+import com.bruce007tw.order.Room.OrderEntity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -239,6 +241,11 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int i) {
+
+                                        //OrderEntity orderEntity = new OrderEntity();
+                                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(MenuActivity.this);
+                                        orderDatabase.orderDao().nukeTable();
+
                                         startActivity(new Intent(MenuActivity.this, MainActivity.class));
                                     }
                                 })
