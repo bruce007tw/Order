@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detailLayout"
@@ -14,19 +15,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/mcdelivery_new11" />
+        app:srcCompat="@mipmap/mcdelivery_new11"
+        android:scaleType="fitCenter" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/detailCardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailFoodPic">
 
-        <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.constraint.ConstraintLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/detailConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -37,9 +43,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="28dp"
                 android:text="FoodName"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,50 +53,27 @@
                 android:id="@+id/detailFoodPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
                 android:text="FoodPrice"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/detailFoodName"
                 app:layout_constraintTop_toBottomOf="@+id/detailFoodName" />
-
-            <TextView
-                android:id="@+id/detailDetailTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="Detail"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/detailFoodPrice"
-                app:layout_constraintTop_toBottomOf="@+id/detailFoodPrice" />
 
             <TextView
                 android:id="@+id/detailFoodDetail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginTop="12dp"
-                android:lineSpacingExtra="10sp"
+                android:lineSpacingExtra="4sp"
                 android:text="Favourite meals from worldly cuisines- find the version of a recipe to suit you. Baked potato. Perfect your spud technique then pile our filling ideas high. Burger. Casserole. Chicken salad. Crumble. Curry. Fish pie. Frittata."
-                android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@+id/detailAddBtn"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/detailQuantity"
                 app:layout_constraintEnd_toEndOf="@+id/detailAddBtn"
-                app:layout_constraintStart_toStartOf="@+id/detailDetailTitle"
-                app:layout_constraintTop_toBottomOf="@+id/detailDetailTitle" />
-
-            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                android:id="@+id/detailNumberBtn"
-                android:layout_width="120dp"
-                android:layout_height="0dp"
-                android:gravity="center"
-                app:backGroundColor="@color/colorPrimaryDark"
-                app:finalNumber="20"
-                app:initialNumber="1"
-                app:layout_constraintBottom_toBottomOf="@+id/detailFoodPrice"
-                app:layout_constraintEnd_toEndOf="@+id/detailFoodDetail"
-                app:layout_constraintTop_toTopOf="@+id/detailFoodPrice"
-                app:textSize="8sp" />
+                app:layout_constraintStart_toStartOf="@+id/detailFoodPrice"
+                app:layout_constraintTop_toBottomOf="@+id/detailFoodPrice" />
 
             <Button
                 android:id="@+id/detailAddBtn"
@@ -108,6 +91,45 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/detailMinus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="36dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="@+id/detailQuantity"
+                app:layout_constraintStart_toStartOf="@+id/detailAddBtn"
+                app:layout_constraintTop_toTopOf="@+id/detailQuantity"
+                app:srcCompat="@mipmap/minus" />
+
+            <ImageButton
+                android:id="@+id/detailPlus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="36dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="@+id/detailQuantity"
+                app:layout_constraintEnd_toEndOf="@+id/detailAddBtn"
+                app:layout_constraintTop_toTopOf="@+id/detailQuantity"
+                app:srcCompat="@mipmap/plus" />
+
+            <TextView
+                android:id="@+id/detailQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="1"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toTopOf="@+id/detailAddBtn"
+                app:layout_constraintEnd_toStartOf="@+id/detailPlus"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toEndOf="@+id/detailMinus" />
 
         </android.support.constraint.ConstraintLayout>
 

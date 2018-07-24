@@ -4,11 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import static com.bruce007tw.order.Room.OrderEntity.TABLE_ORDER;
-
-@Entity(tableName = TABLE_ORDER)
+@Entity
 public class OrderEntity {
-    public static final String TABLE_ORDER = "expense";
 
     @PrimaryKey(autoGenerate = true)
 

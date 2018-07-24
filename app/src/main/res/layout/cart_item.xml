@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cartCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginBottom="4dp"
     android:layout_marginTop="4dp"
+    android:padding="0dp"
     app:cardCornerRadius="4dp">
 
-    <LinearLayout
-        android:id="@+id/cartCardLayout"
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/detailConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:padding="4dp">
 
         <ImageView
             android:id="@+id/cartFoodImage"
             android:layout_width="120dp"
             android:layout_height="80dp"
-            android:layout_margin="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@mipmap/mcdelivery_new11" />
 
         <TextView
@@ -28,25 +36,69 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="TextView"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="NAME"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cartFoodImage"
+            app:layout_constraintStart_toEndOf="@+id/cartFoodImage"
+            app:layout_constraintTop_toTopOf="@+id/cartFoodImage" />
 
-        <Spinner
-            android:id="@+id/cartFoodSpinner"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:id="@+id/cartFoodRemove"
+        <TextView
+            android:id="@+id/cartFoodQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:text="Quantity"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cartRemove"
+            app:layout_constraintEnd_toStartOf="@+id/cartRemove"
+            app:layout_constraintTop_toTopOf="@+id/cartRemove"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/cartPlus"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="2dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/cartFoodQuantity"
+            app:layout_constraintEnd_toEndOf="@+id/cartFoodQuantity"
+            app:layout_constraintStart_toStartOf="@+id/cartFoodQuantity"
+            app:srcCompat="@mipmap/up_arrow" />
+
+        <ImageButton
+            android:id="@+id/cartMinus"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="2dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="@+id/cartFoodQuantity"
+            app:layout_constraintStart_toStartOf="@+id/cartFoodQuantity"
+            app:layout_constraintTop_toBottomOf="@+id/cartFoodQuantity"
+            app:srcCompat="@mipmap/down_arrow" />
+
+        <ImageButton
+            android:id="@+id/cartRemove"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

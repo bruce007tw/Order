@@ -21,7 +21,6 @@ import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
 import com.bruce007tw.order.Room.OrderDatabase;
-import com.bruce007tw.order.Room.OrderEntity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -39,10 +38,8 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
 
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
-
     private FirebaseFirestore mFirestore;
     private FoodRecyclerAdapter mAdapter;
-    //private FirestoreRecyclerAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Query mQuery;
 
@@ -56,8 +53,6 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
         getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
-        //init();
-        //getFoodList();
         Firestore();
         StepView();
         BottomBar();
@@ -103,85 +98,6 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
         intent.putExtra(FoodDetail.KEY_FOOD_ID, firebaseFood.getId());
         startActivity(intent);
     }
-
-//    private void init() {
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-//        menuRecyclerView.setLayoutManager(linearLayoutManager);
-//        mFirestore = FirebaseFirestore.getInstance();
-//    }
-//
-//    private void getFoodList() {
-//        Query query = mFirestore.collection("FoodMenu");
-//
-//        FirestoreRecyclerOptions<Foods> foods = new FirestoreRecyclerOptions.Builder<Foods>()
-//                .setQuery(query, Foods.class)
-//                .build();
-//
-//        mAdapter = new FirestoreRecyclerAdapter<Foods, FoodHolder>(foods) {
-//            @Override
-//            public void onBindViewHolder(@NonNull FoodHolder holder, int position, @NonNull Foods model) {
-//                Log.d(TAG, "呼叫onBindViewHolder");
-//
-//                Glide.with(getApplicationContext())
-//                        .load(model.getFoodPic())
-//                        .into(holder.menuFoodPic);
-//
-//                holder.menuFoodName.setText(model.getFoodName());
-//                holder.menuFoodPrice.setText(model.getFoodPrice());
-//
-//                holder.menuCardView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Log.d(TAG, "點擊：" + model.getFoodName());
-//                        DocumentSnapshot snapshot = getSnapshots().getSnapshot(holder.getAdapterPosition());
-//                        Intent foodDetail = new Intent(MenuActivity.this, FoodDetail.class);
-//                        foodDetail.putExtra("foodID", snapshot.getId());
-//                        startActivity(foodDetail);
-//                    }
-//                });
-//            }
-//
-//            @NonNull
-//            @Override
-//            public FoodHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item, parent, false);
-//                return new FoodHolder(view);
-//            }
-//
-//            @Override
-//            public void onError(@NonNull FirebaseFirestoreException e) {
-//                super.onError(e);
-//                Log.e("錯誤：", e.getMessage());
-//            }
-//        };
-//        mAdapter.notifyDataSetChanged();
-//        menuRecyclerView.setAdapter(mAdapter);
-//    }
-//
-//    public class FoodHolder extends RecyclerView.ViewHolder {
-//        @BindView(R2.id.menuCardView) CardView menuCardView;
-//        @BindView(R2.id.menuCardLayout) LinearLayout menuCardLayout;
-//        @BindView(R2.id.menufoodImage) ImageView menuFoodPic;
-//        @BindView(R2.id.menuFoodName) TextView menuFoodName;
-//        @BindView(R2.id.menuFoodPrice) TextView menuFoodPrice;
-//
-//        public FoodHolder(View itemView) {
-//            super(itemView);
-//            ButterKnife.bind(this, itemView);
-//        }
-//    }
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        mAdapter.startListening();
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        mAdapter.stopListening();
-//    }
 
     private void StepView() {
         step_view = findViewById(R.id.step_view);
@@ -243,7 +159,7 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                                     public void onClick(DialogInterface dialog, int i) {
 
                                         OrderDatabase orderDatabase = OrderDatabase.getDatabase(MenuActivity.this);
-                                        orderDatabase.orderDao().nukeTable();
+                                        orderDatabase.orderDao().nukeOrder();
 
                                         startActivity(new Intent(MenuActivity.this, MainActivity.class));
                                     }

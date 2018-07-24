@@ -1,5 +1,6 @@
 package com.bruce007tw.order.Activities;
 
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,35 +8,25 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bruce007tw.order.Model.Foods;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
-import com.bruce007tw.order.Room.OrderDao;
 import com.bruce007tw.order.Room.OrderDatabase;
 import com.bruce007tw.order.Room.OrderEntity;
 import com.bumptech.glide.Glide;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-
-import com.google.api.LogDescriptor;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -48,14 +39,15 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
 
     public static final String KEY_FOOD_ID = "key_food_id";
 
+    private FirebaseFirestore mFirestore;
+    private DocumentReference mReference;
+    private ListenerRegistration mRegistration;
+    private String foodID;
+    private Foods currentFood;
+    private int quantity = 1;
+
     @BindView(R2.id.detailFoodPic)
     ImageView detailFoodPic;
-
-    @BindView(R2.id.detailCardView)
-    CardView detailCardView;
-
-    @BindView(R2.id.detailConstraintLayout)
-    ConstraintLayout detailConstraintLayout;
 
     @BindView(R2.id.detailFoodName)
     TextView detailFoodName;
@@ -63,27 +55,20 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
     @BindView(R2.id.detailFoodPrice)
     TextView detailFoodPrice;
 
-    @BindView(R2.id.detailDetailTitle)
-    TextView detailDetailTitle;
-
     @BindView(R2.id.detailFoodDetail)
     TextView detailFoodDetail;
 
-    @BindView(R2.id.detailNumberBtn)
-    ElegantNumberButton detailNumberBtn;
+    @BindView(R2.id.detailMinus)
+    ImageButton detailMinus;
+
+    @BindView(R2.id.detailPlus)
+    ImageButton detailPlus;
+
+    @BindView(R2.id.detailQuantity)
+    TextView detailQuantity;
 
     @BindView(R2.id.detailAddBtn)
     Button addBtn;
-
-    private FirebaseFirestore mFirestore;
-    private DocumentReference mReference;
-    private ListenerRegistration mRegistration;
-    private Query mQuery;
-    private String foodID;
-    private Foods currentFood;
-
-    private Boolean isCartEmpty, isItemAlreadyInCart = false;
-    int indexOfAlreadyPresentItem = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +76,14 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
         setContentView(R.layout.food_detail);
         getSupportActionBar().hide();
         ButterKnife.bind(this);
+        setQuantity();
         AddToCart();
-        //init();
 
         foodID = getIntent().getExtras().getString(KEY_FOOD_ID);
         Log.d(TAG, "foodID：" + getIntent().getExtras().getString(KEY_FOOD_ID));
+
+        detailQuantity.setText(String.valueOf(quantity));
+
         mFirestore = FirebaseFirestore.getInstance();
         mReference = mFirestore.collection("FoodMenu").document(foodID);
     }
@@ -142,6 +130,30 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
         detailFoodDetail.setText(currentFood.getFoodDetail());
     }
 
+    private void setQuantity() {
+        detailPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (quantity < 10){
+                    quantity++;
+                    detailQuantity.setText(String.valueOf(quantity));
+                } else {
+                    Toast.makeText(getApplicationContext(), "單次點餐最多10份", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        detailMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (quantity > 1){
+                    quantity--;
+                    detailQuantity.setText(String.valueOf(quantity));
+                }
+            }
+        });
+    }
+
     private void AddToCart () {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,9 +163,11 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
                         currentFood.getFoodPic(),
                         currentFood.getFoodPrice(),
                         currentFood.getFoodDetail(),
-                        3);
+                        quantity);
                 OrderDatabase.getDatabase(getApplicationContext()).orderDao().addOrder(orderEntity);
                 Log.d(TAG, "購物車：" + orderEntity);
+                Toast.makeText(getApplicationContext(), "新增成功", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(FoodDetail.this, MenuActivity.class));
             }
         });
     }

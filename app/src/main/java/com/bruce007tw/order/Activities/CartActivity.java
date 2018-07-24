@@ -15,20 +15,15 @@ import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
 
 import com.bruce007tw.order.Adapters.CartRecyclerAdapter;
-import com.bruce007tw.order.Adapters.FoodRecyclerAdapter;
 import com.bruce007tw.order.FillActivity;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
-import com.bruce007tw.order.Room.OrderDao;
 import com.bruce007tw.order.Room.OrderDatabase;
 import com.bruce007tw.order.Room.OrderEntity;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
@@ -46,17 +41,11 @@ public class CartActivity extends AppCompatActivity {
 
     private FirebaseFirestore mFirestore;
     private CollectionReference mReference;
-    private ListenerRegistration mRegistration;
     private CartRecyclerAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Query mQuery;
 
-    private Boolean isCartEmpty = true;
-
     private List<OrderEntity> orderEntityList = new ArrayList<>();
-    private OrderDao orderDao;
-
-
 
     @BindView(R2.id.cartRecyclerView)
     RecyclerView cartRecyclerView;
@@ -68,12 +57,12 @@ public class CartActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
+
         Firestore();
         selectedFood();
         stepView();
         bottomBar();
     }
-
 
     private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
@@ -85,9 +74,6 @@ public class CartActivity extends AppCompatActivity {
         mFirestore.setFirestoreSettings(settings);
 
         mQuery = mFirestore.collection("FoodMenu");
-
-//        mAdapter = new CartRecyclerAdapter(mQuery,this) {
-//        };
 
         cartRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);

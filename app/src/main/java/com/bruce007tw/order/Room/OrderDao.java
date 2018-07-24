@@ -1,7 +1,6 @@
 package com.bruce007tw.order.Room;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -11,19 +10,18 @@ import java.util.List;
 @Dao
 public interface OrderDao {
 
-    @Query("select * from " + OrderEntity.TABLE_ORDER)
+    @Query("SELECT * FROM OrderEntity")
     List<OrderEntity> getAll();
-
-    @Query("select * from " + OrderEntity.TABLE_ORDER + " where foodQuantity = :foodQuantity")
-    OrderEntity getOrderByQuantity(int foodQuantity);
-
-    @Query("DELETE FROM " + OrderEntity.TABLE_ORDER)
-    void nukeTable();
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addOrder(OrderEntity orderEntity);
 
-    @Delete()
-    void deleteOrder(OrderEntity orderEntity);
+    @Query("UPDATE OrderEntity SET foodQuantity=:foodQuantity WHERE id=:id")
+    void updateOrder(int foodQuantity, int id);
+
+    @Query("DELETE FROM OrderEntity WHERE id=:id")
+    void deleteOrder(int id);
+
+    @Query("DELETE FROM OrderEntity")
+    void nukeOrder();
 }
