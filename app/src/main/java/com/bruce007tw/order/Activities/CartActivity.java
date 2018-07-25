@@ -1,6 +1,7 @@
 package com.bruce007tw.order.Activities;
 
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
@@ -21,13 +23,18 @@ import com.bruce007tw.order.R2;
 
 import com.bruce007tw.order.Room.OrderDatabase;
 import com.bruce007tw.order.Room.OrderEntity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,10 +75,10 @@ public class CartActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
         mReference = mFirestore.collection("FoodMenu");
 
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        mFirestore.setFirestoreSettings(settings);
+//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+//                .setTimestampsInSnapshotsEnabled(true)
+//                .build();
+//        mFirestore.setFirestoreSettings(settings);
 
         mQuery = mFirestore.collection("FoodMenu");
 
@@ -90,9 +97,9 @@ public class CartActivity extends AppCompatActivity {
     private void stepView() {
         step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
-        StepBean stepBean0 = new StepBean("選擇",1);
-        StepBean stepBean1 = new StepBean("購物籃",0);
-        StepBean stepBean2 = new StepBean("填寫",-1);
+        StepBean stepBean0 = new StepBean("資料",1);
+        StepBean stepBean1 = new StepBean("菜單",1);
+        StepBean stepBean2 = new StepBean("購物車",0);
         StepBean stepBean3 = new StepBean("送出",-1);
         stepsBeanList.add(stepBean0);
         stepsBeanList.add(stepBean1);
@@ -134,7 +141,41 @@ public class CartActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_next :
-                        startActivity(new Intent(CartActivity.this, FillActivity.class));
+
+                        int position = 0;
+
+                        int foodID = orderEntityList.get(position).getId();
+                        String name = orderEntityList.get(position).getFoodName();
+                        String Price = orderEntityList.get(position).getFoodPrice();
+                        int quantity = orderEntityList.get(position).getFoodQuantity();
+
+                        for (int i=0; i<=foodID.; i++) {
+
+                            Map<String, Object> orderMap = new HashMap<>();
+                            orderMap.put("foodID", foodID);
+                            orderMap.put("name", name);
+                            orderMap.put("Price", Price);
+                            orderMap.put("quantity", quantity);
+
+                            mFirestore.collection("Orders").document()
+                                    .set(orderMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            //Log.d(TAG, "訂單ID: " + documentReference.getId());
+                                            OrderDatabase orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
+                                            orderDatabase.orderDao().nukeOrder();
+                                            startActivity(new Intent(CartActivity.this, FinishActivity.class));
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            String error = e.getMessage();
+                                            Toast.makeText(CartActivity.this, "發生錯誤：" + error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
                         break;
                     case R.id.action_back :
                         startActivity(new Intent(CartActivity.this, MenuActivity.class));
@@ -145,5 +186,4 @@ public class CartActivity extends AppCompatActivity {
             }
         });
     }
-
 }

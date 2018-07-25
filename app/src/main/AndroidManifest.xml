@@ -24,7 +24,8 @@
         <activity android:name=".Activities.CartActivity" />
         <activity android:name=".FillActivity" />
         <activity android:name=".HistoryActivity" />
-        <activity android:name=".Activities.FoodDetail"></activity>
+        <activity android:name=".Activities.FoodDetail" />
+        <activity android:name=".Activities.FinishActivity"></activity>
     </application>
 
 </manifest>

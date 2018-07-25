@@ -17,6 +17,7 @@ import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
 
 import com.bruce007tw.order.Adapters.FoodRecyclerAdapter;
+import com.bruce007tw.order.FillActivity;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
@@ -61,10 +62,10 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
     private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        mFirestore.setFirestoreSettings(settings);
+//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+//                .setTimestampsInSnapshotsEnabled(true)
+//                .build();
+//        mFirestore.setFirestoreSettings(settings);
 
         mQuery = mFirestore.collection("FoodMenu");
 
@@ -102,9 +103,9 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
     private void StepView() {
         step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
-        StepBean stepBean0 = new StepBean("選擇",0);
-        StepBean stepBean1 = new StepBean("購物籃",-1);
-        StepBean stepBean2 = new StepBean("填寫",-1);
+        StepBean stepBean0 = new StepBean("資料",1);
+        StepBean stepBean1 = new StepBean("菜單",0);
+        StepBean stepBean2 = new StepBean("購物車",-1);
         StepBean stepBean3 = new StepBean("送出",-1);
         stepsBeanList.add(stepBean0);
         stepsBeanList.add(stepBean1);
@@ -149,26 +150,27 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                         startActivity(new Intent(MenuActivity.this, CartActivity.class));
                         break;
                     case R.id.action_main :
-                        AlertDialog dialog = null;
-                        AlertDialog.Builder builder = null;
-                        builder = new AlertDialog.Builder(MenuActivity.this);
-                        builder.setTitle("警告")
-                                .setMessage("點餐尚未完成，確定離開?")
-                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int i) {
-
-                                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(MenuActivity.this);
-                                        orderDatabase.orderDao().nukeOrder();
-
-                                        startActivity(new Intent(MenuActivity.this, MainActivity.class));
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int i) {
-                                    }
-                                }).show();
+                        startActivity(new Intent(MenuActivity.this, FillActivity.class));
+//                        AlertDialog dialog = null;
+//                        AlertDialog.Builder builder = null;
+//                        builder = new AlertDialog.Builder(MenuActivity.this);
+//                        builder.setTitle("警告")
+//                                .setMessage("點餐尚未完成，確定離開?")
+//                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int i) {
+//
+//                                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(MenuActivity.this);
+//                                        orderDatabase.orderDao().nukeOrder();
+//
+//                                        startActivity(new Intent(MenuActivity.this, MainActivity.class));
+//                                    }
+//                                })
+//                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int i) {
+//                                    }
+//                                }).show();
                         break;
                 }
                 return true;
