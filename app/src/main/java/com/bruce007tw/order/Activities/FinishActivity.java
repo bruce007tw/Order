@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
-import com.bruce007tw.order.FillActivity;
 import com.bruce007tw.order.R;
 
 import java.util.ArrayList;
@@ -27,10 +26,10 @@ public class FinishActivity extends AppCompatActivity {
     private void stepView() {
         step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
-        StepBean stepBean0 = new StepBean("選擇",1);
-        StepBean stepBean1 = new StepBean("購物籃",1);
-        StepBean stepBean2 = new StepBean("填寫",1);
-        StepBean stepBean3 = new StepBean("送出",1);
+        StepBean stepBean0 = new StepBean("設定",1);
+        StepBean stepBean1 = new StepBean("目錄",1);
+        StepBean stepBean2 = new StepBean("餐藍",1);
+        StepBean stepBean3 = new StepBean("下單",1);
         stepsBeanList.add(stepBean0);
         stepsBeanList.add(stepBean1);
         stepsBeanList.add(stepBean2);

@@ -20,10 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.FillActivity" />
         <activity android:name=".Activities.MenuActivity" />
         <activity android:name=".Activities.CartActivity" />
-        <activity android:name=".FillActivity" />
-        <activity android:name=".HistoryActivity" />
+        <activity android:name=".Activities.HistoryActivity" />
         <activity android:name=".Activities.FoodDetail" />
         <activity android:name=".Activities.FinishActivity"></activity>
     </application>

@@ -1,8 +1,10 @@
-package com.bruce007tw.order;
+package com.bruce007tw.order.Activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -22,13 +24,18 @@ import com.bruce007tw.order.Activities.FinishActivity;
 
 import com.bruce007tw.order.Activities.MainActivity;
 import com.bruce007tw.order.Activities.MenuActivity;
+import com.bruce007tw.order.Model.clientID;
+import com.bruce007tw.order.R;
+import com.bruce007tw.order.R2;
 import com.bruce007tw.order.Room.OrderDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
@@ -44,10 +51,14 @@ public class FillActivity extends AppCompatActivity {
 
     private static final String TAG = "FillActivity";
 
+    public static final String PREFS_NAME = "MyPrefsFile";
+
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
 
     private FirebaseFirestore mFirestore;
+    private DocumentReference clientReference;
+    private clientID clientID;
 
     @BindView(R2.id.editName)
     EditText editName;
@@ -73,6 +84,12 @@ public class FillActivity extends AppCompatActivity {
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
         mFirestore.setFirestoreSettings(settings);
+
+//        clientReference = mFirestore.collection("Orders").document();
+//        String referenceID = clientReference.getId();
+//        SharedPreferences setting = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//        setting.edit().putString("referenceID", referenceID).commit();
+//        Log.d(TAG, "referenceID：" + referenceID);
     }
 
     private void stepView() {
@@ -81,7 +98,7 @@ public class FillActivity extends AppCompatActivity {
         StepBean stepBean0 = new StepBean("設定",0);
         StepBean stepBean1 = new StepBean("目錄",-1);
         StepBean stepBean2 = new StepBean("餐籃",-1);
-        StepBean stepBean3 = new StepBean("送出",-1);
+        StepBean stepBean3 = new StepBean("下單",-1);
         stepsBeanList.add(stepBean0);
         stepsBeanList.add(stepBean1);
         stepsBeanList.add(stepBean2);
@@ -136,18 +153,17 @@ public class FillActivity extends AppCompatActivity {
                         clientMap.put("address", address);
                         clientMap.put("orderDate", orderDate);
 
-                        //DocumentReference documentReference = mFirestore.collection("Orders").document();
+
 
                         mFirestore.collection("Orders")
                                 .add(clientMap)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Log.d(TAG, "訂單ID: " + documentReference.getId());
-
-                                        String clientID = documentReference.getId();
-                                        Log.d(TAG, "clientID：" + clientID);
-
+                                        String referenceID = documentReference.getId();
+                                        SharedPreferences setting = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                                        setting.edit().putString("referenceID", referenceID).commit();
+                                        Log.d(TAG, "referenceID：" + referenceID);
                                         startActivity(new Intent(FillActivity.this, MenuActivity.class));
                                     }
                                 })

@@ -1,4 +1,4 @@
-package com.bruce007tw.order;
+package com.bruce007tw.order.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,16 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bruce007tw.order.R;
+
 import java.util.ArrayList;
 
-public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolderHistory>{
+public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecyclerAdapter.ViewHolderHistory>{
     private static final String TAG = "HistoryRecyclerViewAdap";
 
     private Context mContext;
     private ArrayList<String> mHistoryName = new ArrayList<>();
     //private ArrayList<String> mfoodPic = new ArrayList<>();
 
-    public HistoryRecyclerViewAdapter(Context mContext, ArrayList<String> mHistoryName) {
+    public HistoryRecyclerAdapter(Context mContext, ArrayList<String> mHistoryName) {
         this.mContext = mContext;
         this.mHistoryName = mHistoryName;
         //this.mfoodPic = mfoodPic;

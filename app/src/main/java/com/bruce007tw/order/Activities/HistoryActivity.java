@@ -1,4 +1,4 @@
-package com.bruce007tw.order;
+package com.bruce007tw.order.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.bruce007tw.order.Activities.MainActivity;
+import com.bruce007tw.order.Adapters.HistoryRecyclerAdapter;
+import com.bruce007tw.order.R;
 
 import java.util.ArrayList;
 
@@ -63,7 +64,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: RecyclerView啟動");
         RecyclerView recyclerView = findViewById(R.id.historyRecyclerView);
-        HistoryRecyclerViewAdapter adapter = new HistoryRecyclerViewAdapter(this, mHistoryName);
+        HistoryRecyclerAdapter adapter = new HistoryRecyclerAdapter(this, mHistoryName);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

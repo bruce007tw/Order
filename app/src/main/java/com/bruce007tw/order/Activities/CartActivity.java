@@ -1,7 +1,7 @@
 package com.bruce007tw.order.Activities;
 
+import android.content.Context;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +17,6 @@ import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
 
 import com.bruce007tw.order.Adapters.CartRecyclerAdapter;
-import com.bruce007tw.order.FillActivity;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
@@ -28,7 +27,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
@@ -38,6 +36,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.bruce007tw.order.Activities.FillActivity.PREFS_NAME;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -51,7 +51,6 @@ public class CartActivity extends AppCompatActivity {
     private CartRecyclerAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Query mQuery;
-
     private List<OrderEntity> orderEntityList = new ArrayList<>();
 
     @BindView(R2.id.cartRecyclerView)
@@ -97,10 +96,10 @@ public class CartActivity extends AppCompatActivity {
     private void stepView() {
         step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
-        StepBean stepBean0 = new StepBean("資料",1);
-        StepBean stepBean1 = new StepBean("菜單",1);
-        StepBean stepBean2 = new StepBean("購物車",0);
-        StepBean stepBean3 = new StepBean("送出",-1);
+        StepBean stepBean0 = new StepBean("設定",1);
+        StepBean stepBean1 = new StepBean("目錄",1);
+        StepBean stepBean2 = new StepBean("餐藍",0);
+        StepBean stepBean3 = new StepBean("下單",-1);
         stepsBeanList.add(stepBean0);
         stepsBeanList.add(stepBean1);
         stepsBeanList.add(stepBean2);
@@ -142,14 +141,15 @@ public class CartActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.action_next :
 
-                        int position = 0;
+                        String clientID = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                                .getString("referenceID", "");
 
-                        int foodID = orderEntityList.get(position).getId();
-                        String name = orderEntityList.get(position).getFoodName();
-                        String Price = orderEntityList.get(position).getFoodPrice();
-                        int quantity = orderEntityList.get(position).getFoodQuantity();
+                        for (int position=0; position<=orderEntityList.size()-1; position++) {
 
-                        for (int i=0; i<=foodID.; i++) {
+                            int foodID = orderEntityList.get(position).getId();
+                            String name = orderEntityList.get(position).getFoodName();
+                            String Price = orderEntityList.get(position).getFoodPrice();
+                            int quantity = orderEntityList.get(position).getFoodQuantity();
 
                             Map<String, Object> orderMap = new HashMap<>();
                             orderMap.put("foodID", foodID);
@@ -157,15 +157,11 @@ public class CartActivity extends AppCompatActivity {
                             orderMap.put("Price", Price);
                             orderMap.put("quantity", quantity);
 
-                            mFirestore.collection("Orders").document()
-                                    .set(orderMap)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            mFirestore.collection("Orders").document(clientID).collection("Orders")
+                                    .add(orderMap)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
-                                        public void onSuccess(Void aVoid) {
-                                            //Log.d(TAG, "訂單ID: " + documentReference.getId());
-                                            OrderDatabase orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
-                                            orderDatabase.orderDao().nukeOrder();
-                                            startActivity(new Intent(CartActivity.this, FinishActivity.class));
+                                        public void onSuccess(DocumentReference documentReference) {
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -176,7 +172,11 @@ public class CartActivity extends AppCompatActivity {
                                         }
                                     });
                         }
+                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
+                        orderDatabase.orderDao().nukeOrder();
+                        startActivity(new Intent(CartActivity.this, FinishActivity.class));
                         break;
+
                     case R.id.action_back :
                         startActivity(new Intent(CartActivity.this, MenuActivity.class));
                         break;
