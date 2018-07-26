@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.LogDescriptor;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -37,7 +38,7 @@ public class HistorySearch extends AppCompatActivity {
     private HistoryRecyclerAdapter mAdapter;
     private FirebaseFirestore mFirestore;
     private Query mQuery;
-    private List<Keywords> searchResults = new ArrayList<>();
+    private ArrayList<Keywords> searchResults = new ArrayList<>();
 
     @BindView(R2.id.searchName)
     EditText searchName;
@@ -54,11 +55,11 @@ public class HistorySearch extends AppCompatActivity {
         setContentView(R.layout.history_search);
         getSupportActionBar().hide();
         ButterKnife.bind(this);
-        search();
+        Search();
 
-        mFirestore = FirebaseFirestore.getInstance();
-
-        mQuery = mFirestore.collection("Requests");
+//        mFirestore = FirebaseFirestore.getInstance();
+//
+//        mQuery = mFirestore.collection("Requests");
 
 //        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 //        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -67,41 +68,73 @@ public class HistorySearch extends AppCompatActivity {
 //        firestore.setFirestoreSettings(settings);
     }
 
-    public void search() {
+    public void Search() {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFirestore.collection("Requests")
-                        .whereEqualTo("name", searchName.getText().toString())
-                        .whereEqualTo("phone", searchPhone.getText().toString())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (DocumentSnapshot snapshot : task.getResult()) {
-                                        Keywords keywords = snapshot.toObject(Keywords.class);
-//                                        Keywords keywords = new Keywords();
-//                                        keywords.setName(snapshot.getString("name"));
-//                                        keywords.setPhone(snapshot.getString("phone"));
-//                                        keywords.setAddress(snapshot.getString("address"));
-//                                        keywords.setOrderDate(snapshot.getString("orderDate"));
-                                        searchResults.add(keywords);
-                                        Log.d(TAG, "搜尋結果：" + searchResults);
-                                        //Log.d(TAG, "搜尋結果：" + snapshot.getId() + " => " + snapshot.getData());
-                                        startActivity(new Intent(HistorySearch.this, HistoryList.class));
-                                    }
-                                }
-                                else {
-                                    Log.d(TAG, "錯誤：" + task.getException());
-                                }
-                            }
-                        });
+                Intent intent = new Intent(HistorySearch.this, HistoryList.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", searchName.getText().toString());
+                bundle.putString("phone", searchPhone.getText().toString());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
 
-    public List<Keywords> searchResults() {
-        return searchResults;
-    }
+//    public void search() {
+//        btnSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mFirestore.collection("Requests")
+//                        .whereEqualTo("name", searchName.getText().toString())
+//                        .whereEqualTo("phone", searchPhone.getText().toString())
+//                        .get()
+////                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+////                            @Override
+////                            public void onSuccess(QuerySnapshot snapshots) {
+////                                if (snapshots.isEmpty()) {
+////                                    Log.d(TAG, "搜尋結果：LIST EMPTY");
+////                                    return;
+////                                }
+////                                else {
+////                                    List<Keywords> keywords = snapshots.toObjects(Keywords.class);
+////                                    searchResults.addAll(keywords);
+////                                    Log.d(TAG, "搜尋結果：" + searchResults);
+////                                }
+////                            }
+////                        });
+//
+//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    for (DocumentSnapshot snapshot : task.getResult()) {
+//                                        String ID = snapshot.getId();
+//                                        Log.d(TAG, "onComplete: " + ID);
+////                                        Keywords keywords = snapshot.toObject(Keywords.class);
+////                                        Keywords keywords = new Keywords();
+////                                        Log.d(TAG, "搜尋結果：" + keywords);
+////                                        keywords.setName(snapshot.getString("name"));
+////                                        keywords.setPhone(snapshot.getString("phone"));
+////                                        keywords.setAddress(snapshot.getString("address"));
+////                                        keywords.setOrderDate(snapshot.getString("orderDate"));
+////                                        searchResults.add(keywords);
+//                                        //Log.d(TAG, "搜尋結果：" + searchResults);
+////                                        Log.d(TAG, "搜尋結果：" + snapshot.getId() + " => " + snapshot.getData());
+//                                        //startActivity(new Intent(HistorySearch.this, HistoryList.class));
+//                                    }
+//                                }
+//                                else {
+//                                    Log.d(TAG, "錯誤：" + task.getException());
+//                                }
+//                            }
+//                        });
+//            }
+//        });
+//    }
+//
+//    public List<Keywords> searchResults() {
+//        return ID;
+//    }
 }

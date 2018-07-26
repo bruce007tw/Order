@@ -44,8 +44,8 @@ public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.Fo
 
     @Override
     public void onBindViewHolder(@NonNull FoodHolder holder, int position) {
-        final DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
-        final Foods foods = documentSnapshot.toObject(Foods.class);
+        DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
+        Foods foods = documentSnapshot.toObject(Foods.class);
 
         Log.d(TAG, "呼叫 onBindViewHolder");
 
