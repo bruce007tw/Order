@@ -20,6 +20,7 @@ import com.bruce007tw.order.R2;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
@@ -56,11 +57,6 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
 
     private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
-
-//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-//                .setTimestampsInSnapshotsEnabled(true)
-//                .build();
-//        mFirestore.setFirestoreSettings(settings);
 
         mQuery = mFirestore.collection("FoodMenu");
 
@@ -146,26 +142,6 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                         break;
                     case R.id.action_main :
                         startActivity(new Intent(MenuActivity.this, FillActivity.class));
-//                        AlertDialog dialog = null;
-//                        AlertDialog.Builder builder = null;
-//                        builder = new AlertDialog.Builder(MenuActivity.this);
-//                        builder.setTitle("警告")
-//                                .setMessage("點餐尚未完成，確定離開?")
-//                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int i) {
-//
-//                                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(MenuActivity.this);
-//                                        orderDatabase.orderDao().nukeOrder();
-//
-//                                        startActivity(new Intent(MenuActivity.this, MainActivity.class));
-//                                    }
-//                                })
-//                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int i) {
-//                                    }
-//                                }).show();
                         break;
                 }
                 return true;

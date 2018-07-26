@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.HistoryActivity">
+    tools:context=".Activities.HistoryList">
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_bar"

@@ -23,9 +23,11 @@
         <activity android:name=".Activities.FillActivity" />
         <activity android:name=".Activities.MenuActivity" />
         <activity android:name=".Activities.CartActivity" />
-        <activity android:name=".Activities.HistoryActivity" />
+        <activity android:name=".Activities.HistoryList" />
         <activity android:name=".Activities.FoodDetail" />
-        <activity android:name=".Activities.FinishActivity"></activity>
+        <activity android:name=".Activities.FinishActivity" />
+        <activity android:name=".Activities.HistorySearch" />
+        <activity android:name=".Activities.HistoryDetail"></activity>
     </application>
 
 </manifest>

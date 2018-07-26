@@ -1,5 +1,7 @@
 package com.bruce007tw.order.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,13 +13,7 @@ import com.bruce007tw.order.R;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final int RC_SIGN_IN = 9001;
-
     private BottomNavigationView bottom_bar;
-
-//    private FirebaseFirestore mFirestore;
-//    private Query mQuery;
-//    private MainActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,35 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         bottomBar();
-
-//        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-//        FirebaseFirestore.setLoggingEnabled(true);
-//        mFirestore = FirebaseFirestore.getInstance();
     }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if (shouldStartSignIn()) {
-//            startSignIn();
-//            return;
-//        }
-//    }
-//
-//    private boolean shouldStartSignIn() {
-//        return (!mViewModel.getIsSigningIn() && FirebaseAuth.getInstance().getCurrentUser() == null);
-//    }
-//
-//    private void startSignIn() {
-//        // Sign in with FirebaseUI
-//        Intent intent = AuthUI.getInstance().createSignInIntentBuilder()
-//                .setAvailableProviders(Collections.singletonList(
-//                        new AuthUI.IdpConfig.EmailBuilder().build()))
-//                .setIsSmartLockEnabled(false)
-//                .build();
-//        startActivityForResult(intent, RC_SIGN_IN);
-//        mViewModel.setIsSigningIn(true);
-//    }
 
     private void bottomBar() {
         bottom_bar = findViewById(R.id.bottom_bar);
@@ -65,10 +33,26 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, FillActivity.class));
                         break;
                     case R.id.action_history :
-                        startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                        startActivity(new Intent(MainActivity.this, HistorySearch.class));
                         break;
+                    case  R.id.action_exit :
+                        AlertDialog dialog = null;
+                        AlertDialog.Builder builder = null;
+                        builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("警告")
+                                .setMessage("確定離開?")
+                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        System.exit(0);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                    }
+                                }).show();
                 }
-                finish();
                 return true;
             }
         });

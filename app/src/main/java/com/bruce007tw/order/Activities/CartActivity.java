@@ -63,7 +63,6 @@ public class CartActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
-
         Firestore();
         selectedFood();
         stepView();
@@ -72,12 +71,8 @@ public class CartActivity extends AppCompatActivity {
 
     private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
-        mReference = mFirestore.collection("FoodMenu");
 
-//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-//                .setTimestampsInSnapshotsEnabled(true)
-//                .build();
-//        mFirestore.setFirestoreSettings(settings);
+        mReference = mFirestore.collection("FoodMenu");
 
         mQuery = mFirestore.collection("FoodMenu");
 
@@ -181,7 +176,6 @@ public class CartActivity extends AppCompatActivity {
                         startActivity(new Intent(CartActivity.this, MenuActivity.class));
                         break;
                 }
-                finish();
                 return true;
             }
         });

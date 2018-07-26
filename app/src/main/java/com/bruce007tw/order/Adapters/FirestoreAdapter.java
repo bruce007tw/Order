@@ -70,16 +70,6 @@ public abstract class FirestoreAdapter<VH extends RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public void setQuery(Query query) {
-        stopListening();
-
-        mDocumentSnapshot.clear();
-        notifyDataSetChanged();
-
-        mQuery = query;
-        startListening();
-    }
-
     protected DocumentSnapshot getSnapshot(int index) {
         return mDocumentSnapshot.get(index);
     }

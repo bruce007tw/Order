@@ -1,26 +1,63 @@
 package com.bruce007tw.order.Activities;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
+
 import com.bruce007tw.order.R;
+import com.bruce007tw.order.R2;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class FinishActivity extends AppCompatActivity {
 
     private HorizontalStepView step_view;
+
+    @BindView(R2.id.btnToMain)
+    Button btnToMain;
+
+    @BindView(R2.id.btnToFill)
+    Button btnToFill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish);
         getSupportActionBar().hide();
+        ButterKnife.bind(this);
+        backToMain();
+        backToFill();
         stepView();
+    }
+
+    private void backToMain() {
+        btnToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FinishActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+    }
+
+    private void backToFill() {
+        btnToFill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FinishActivity.this, FillActivity.class));
+                finish();
+            }
+        });
     }
 
     private void stepView() {

@@ -12,68 +12,73 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bruce007tw.order.Activities.HistorySearch;
+import com.bruce007tw.order.Model.Keywords;
 import com.bruce007tw.order.R;
+import com.bruce007tw.order.R2;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecyclerAdapter.ViewHolderHistory>{
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryHolder> {
+
     private static final String TAG = "HistoryRecyclerViewAdap";
 
     private Context mContext;
-    private ArrayList<String> mHistoryName = new ArrayList<>();
-    //private ArrayList<String> mfoodPic = new ArrayList<>();
+    private List<Keywords> searchResults;
 
-    public HistoryRecyclerAdapter(Context mContext, ArrayList<String> mHistoryName) {
+    public HistoryRecyclerAdapter(List<Keywords> searchResults, Context mContext) {
         this.mContext = mContext;
-        this.mHistoryName = mHistoryName;
-        //this.mfoodPic = mfoodPic;
+        this.searchResults = searchResults;
     }
+
+    //    public interface onHistorySelectedListener {
+//        void onHistorySelected(DocumentSnapshot firebaseFood);
+//    }
+//
+//    private onHistorySelectedListener mListener;
+//
+//    public HistoryRecyclerAdapter(Query mQuery, onHistorySelectedListener mListener) {
+//        super(mQuery);
+//        this.mListener = mListener;
+//    }
 
     @NonNull
     @Override
-    public ViewHolderHistory onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_item, viewGroup, false);
-        ViewHolderHistory holder = new ViewHolderHistory(view);
-        return holder;
+    public HistoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.history_item, parent, false);
+        return new HistoryHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderHistory holder, final int position) {
-        Log.i(TAG, "呼叫onBindViewHolder");
+    public void onBindViewHolder(@NonNull HistoryHolder holder, int position) {
 
-//        GlideApp.with(mContext)
-//                .asBitmap()
-//                .load(mfoodPic.get(position))
-//                .into(holder.imgMenu);
+        Keywords current = searchResults.get(position);
 
-        holder.txtHistory.setText(mHistoryName.get(position));
+        holder.orderDate.setText(current.getOrderDate());
 
-        holder.cardViewHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "點擊: " + mHistoryName.get(position));
-                Toast.makeText(mContext, mHistoryName.get(position), Toast.LENGTH_SHORT);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        return mHistoryName.size();
+        return searchResults.size();
     }
 
-    public class ViewHolderHistory extends RecyclerView.ViewHolder {
-        CardView cardViewHistory;
-        LinearLayout cardLayoutHistory;
-        //ImageView imgMenu;
-        TextView txtHistory;
+    public class HistoryHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolderHistory(View setView) {
-            super(setView);
-            cardLayoutHistory = setView.findViewById(R.id.cardLayoutHistory);
-            cardViewHistory = setView.findViewById(R.id.cardViewHistory);
-            //imgMenu = setView.findViewById(R.id.imgMenu);
-            txtHistory = setView.findViewById(R.id.txtHistory);
+        @BindView(R2.id.historyOrderDate)
+        TextView orderDate;
+
+        public HistoryHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

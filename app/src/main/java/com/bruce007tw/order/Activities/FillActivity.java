@@ -1,5 +1,6 @@
 package com.bruce007tw.order.Activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,23 +20,13 @@ import android.widget.Toast;
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
 
-import com.bruce007tw.order.Activities.CartActivity;
-import com.bruce007tw.order.Activities.FinishActivity;
-
-import com.bruce007tw.order.Activities.MainActivity;
-import com.bruce007tw.order.Activities.MenuActivity;
-import com.bruce007tw.order.Model.clientID;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 import com.bruce007tw.order.Room.OrderDatabase;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
@@ -55,10 +46,7 @@ public class FillActivity extends AppCompatActivity {
 
     private HorizontalStepView step_view;
     private BottomNavigationView bottom_bar;
-
     private FirebaseFirestore mFirestore;
-    private DocumentReference clientReference;
-    private clientID clientID;
 
     @BindView(R2.id.editName)
     EditText editName;
@@ -80,16 +68,10 @@ public class FillActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        mFirestore.setFirestoreSettings(settings);
-
-//        clientReference = mFirestore.collection("Orders").document();
-//        String referenceID = clientReference.getId();
-//        SharedPreferences setting = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        setting.edit().putString("referenceID", referenceID).commit();
-//        Log.d(TAG, "referenceID：" + referenceID);
+//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+//                .setTimestampsInSnapshotsEnabled(true)
+//                .build();
+//        mFirestore.setFirestoreSettings(settings);
     }
 
     private void stepView() {
@@ -153,17 +135,18 @@ public class FillActivity extends AppCompatActivity {
                         clientMap.put("address", address);
                         clientMap.put("orderDate", orderDate);
 
-
-
-                        mFirestore.collection("Orders")
+                        mFirestore.collection("Requests")
                                 .add(clientMap)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
+
+                                        // 取得Document ID
                                         String referenceID = documentReference.getId();
                                         SharedPreferences setting = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                                         setting.edit().putString("referenceID", referenceID).commit();
                                         Log.d(TAG, "referenceID：" + referenceID);
+
                                         startActivity(new Intent(FillActivity.this, MenuActivity.class));
                                     }
                                 })
@@ -181,7 +164,7 @@ public class FillActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = null;
                         builder = new AlertDialog.Builder(FillActivity.this);
                         builder.setTitle("警告")
-                                .setMessage("點餐尚未完成，確定離開?")
+                                .setMessage("點餐尚未完成，確定回到主畫面?")
                                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int i) {
@@ -189,8 +172,8 @@ public class FillActivity extends AppCompatActivity {
                                         // 清空購物車
                                         OrderDatabase orderDatabase = OrderDatabase.getDatabase(FillActivity.this);
                                         orderDatabase.orderDao().nukeOrder();
-
                                         startActivity(new Intent(FillActivity.this, MainActivity.class));
+                                        finish();
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

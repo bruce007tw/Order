@@ -9,5 +9,9 @@
         android:id="@+id/action_order"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="ORDER" />
+    <item
+        android:id="@+id/action_exit"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="EXIT" />
 
 </menu>

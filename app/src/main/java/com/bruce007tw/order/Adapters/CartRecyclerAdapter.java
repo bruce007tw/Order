@@ -17,6 +17,7 @@ import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 import com.bruce007tw.order.Room.OrderDatabase;
 import com.bruce007tw.order.Room.OrderEntity;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -135,7 +136,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
         return orderEntityList.size();
     }
 
-    public class CartHolder extends RecyclerView.ViewHolder { //implements View.OnClickListener
+    public class CartHolder extends RecyclerView.ViewHolder {
 
         @BindView(R2.id.cartFoodImage)
         ImageView FoodImage;
