@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_main"
+        android:id="@+id/action_choose"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="MAIN" />
+        android:title="選擇餐點" />
     <item
-        android:id="@+id/action_next"
+        android:id="@+id/action_send"
         android:icon="@android:drawable/ic_media_play"
-        android:title="NEXT" />
+        android:title="送出訂單" />
 
 </menu>

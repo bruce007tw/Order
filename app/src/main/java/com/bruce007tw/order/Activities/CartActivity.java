@@ -1,6 +1,8 @@
 package com.bruce007tw.order.Activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -134,45 +136,61 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.action_next :
+                    case R.id.action_send :
+                        AlertDialog dialog = null;
+                        AlertDialog.Builder builder = null;
+                        builder = new AlertDialog.Builder(CartActivity.this);
+                        builder.setTitle("警告")
+                                .setMessage("確認餐點無誤?")
+                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String clientID = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                                                .getString("referenceID", "");
 
-                        String clientID = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                                .getString("referenceID", "");
+                                        for (int position=0; position<=orderEntityList.size()-1; position++) {
 
-                        for (int position=0; position<=orderEntityList.size()-1; position++) {
+                                            int foodID = orderEntityList.get(position).getId();
+                                            String name = orderEntityList.get(position).getFoodName();
+                                            String Price = orderEntityList.get(position).getFoodPrice();
+                                            int quantity = orderEntityList.get(position).getFoodQuantity();
 
-                            int foodID = orderEntityList.get(position).getId();
-                            String name = orderEntityList.get(position).getFoodName();
-                            String Price = orderEntityList.get(position).getFoodPrice();
-                            int quantity = orderEntityList.get(position).getFoodQuantity();
+                                            Map<String, Object> orderMap = new HashMap<>();
+                                            orderMap.put("foodID", foodID);
+                                            orderMap.put("name", name);
+                                            orderMap.put("Price", Price);
+                                            orderMap.put("quantity", quantity);
 
-                            Map<String, Object> orderMap = new HashMap<>();
-                            orderMap.put("foodID", foodID);
-                            orderMap.put("name", name);
-                            orderMap.put("Price", Price);
-                            orderMap.put("quantity", quantity);
+                                            mFirestore.collection("Requests").document(clientID).collection("Orders")
+                                                    .add(orderMap)
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
 
-                            mFirestore.collection("Orders").document(clientID).collection("Orders")
-                                    .add(orderMap)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            String error = e.getMessage();
+                                                            Toast.makeText(CartActivity.this, "發生錯誤：" + error, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                         }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            String error = e.getMessage();
-                                            Toast.makeText(CartActivity.this, "發生錯誤：" + error, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
-                        orderDatabase.orderDao().nukeOrder();
-                        startActivity(new Intent(CartActivity.this, FinishActivity.class));
+                                        OrderDatabase orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
+                                        orderDatabase.orderDao().nukeOrder();
+                                        startActivity(new Intent(CartActivity.this, FinishActivity.class));
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                    }
+                                }).show();
+
                         break;
 
-                    case R.id.action_back :
+                    case R.id.action_choose :
                         startActivity(new Intent(CartActivity.this, MenuActivity.class));
                         break;
                 }

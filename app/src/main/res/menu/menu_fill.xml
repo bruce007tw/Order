@@ -4,10 +4,10 @@
     <item
         android:id="@+id/action_back"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="BACK" />
+        android:title="返回" />
     <item
         android:id="@+id/action_next"
         android:icon="@android:drawable/ic_media_play"
-        android:title="NEXT" />
+        android:title="開始點餐" />
 
 </menu>

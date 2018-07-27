@@ -119,6 +119,9 @@ public class HistoryList extends AppCompatActivity implements HistoryRecyclerAda
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
+                    case R.id.action_redo :
+                        startActivity(new Intent(HistoryList.this, HistorySearch.class));
+                        break;
                     case R.id.action_main :
                         startActivity(new Intent(HistoryList.this, MainActivity.class));
                         break;

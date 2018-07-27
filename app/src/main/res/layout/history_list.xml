@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_step1" />
+        app:menu="@menu/menu_history" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/historyRecyclerView"

@@ -140,7 +140,7 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                     case R.id.action_next :
                         startActivity(new Intent(MenuActivity.this, CartActivity.class));
                         break;
-                    case R.id.action_main :
+                    case R.id.action_back :
                         startActivity(new Intent(MenuActivity.this, FillActivity.class));
                         break;
                 }

@@ -22,17 +22,16 @@
         android:id="@+id/detailCardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
         app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailFoodPic">
 
-        <android.support.constraint.ConstraintLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/detailConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -53,13 +52,13 @@
                 android:id="@+id/detailFoodPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
                 android:text="FoodPrice"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/detailFoodName"
-                app:layout_constraintTop_toBottomOf="@+id/detailFoodName" />
+                app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                app:layout_constraintStart_toEndOf="@+id/textView6" />
 
             <TextView
                 android:id="@+id/detailFoodDetail"
@@ -72,7 +71,7 @@
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/detailQuantity"
                 app:layout_constraintEnd_toEndOf="@+id/detailAddBtn"
-                app:layout_constraintStart_toStartOf="@+id/detailFoodPrice"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
                 app:layout_constraintTop_toBottomOf="@+id/detailFoodPrice" />
 
             <Button
@@ -130,6 +129,18 @@
                 app:layout_constraintEnd_toStartOf="@+id/detailPlus"
                 app:layout_constraintHorizontal_bias="0.503"
                 app:layout_constraintStart_toEndOf="@+id/detailMinus" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="NT."
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/detailFoodName"
+                app:layout_constraintTop_toBottomOf="@+id/detailFoodName" />
 
         </android.support.constraint.ConstraintLayout>
 

@@ -49,6 +49,9 @@ public class HistorySearch extends AppCompatActivity {
     @BindView(R2.id.btnSearch)
     Button btnSearch;
 
+    @BindView(R2.id.btnToMain)
+    Button btnToMain;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,7 @@ public class HistorySearch extends AppCompatActivity {
         getSupportActionBar().hide();
         ButterKnife.bind(this);
         Search();
+        BackToMain();
 
 //        mFirestore = FirebaseFirestore.getInstance();
 //
@@ -78,6 +82,15 @@ public class HistorySearch extends AppCompatActivity {
                 bundle.putString("phone", searchPhone.getText().toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void BackToMain() {
+        btnToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistorySearch.this, MainActivity.class));
             }
         });
     }

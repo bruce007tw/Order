@@ -88,20 +88,32 @@
 
     <Button
         android:id="@+id/btnSearch"
-        android:layout_width="0dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="48dp"
         android:background="@color/colorPrimaryDark"
         android:gravity="center"
         android:padding="18dp"
-        android:text="搜尋訂餐紀錄"
+        android:text="搜尋紀錄"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnToMain"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="48dp"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:padding="18dp"
+        android:text="回主畫面"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

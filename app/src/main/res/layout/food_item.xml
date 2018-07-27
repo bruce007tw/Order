@@ -39,17 +39,26 @@
                 android:layout_weight="1"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="NT."
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/menuFoodPrice"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="30dp"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="TextView"
+                android:text="200"
                 android:textAlignment="textEnd"
                 android:textSize="18sp" />
         </LinearLayout>

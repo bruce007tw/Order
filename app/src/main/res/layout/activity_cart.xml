@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_step2" />
+        app:menu="@menu/menu_cart" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cartRecyclerView"
