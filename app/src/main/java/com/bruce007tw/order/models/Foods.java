@@ -1,18 +1,18 @@
-package com.bruce007tw.order.Model;
+package com.bruce007tw.order.models;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Foods {
 
-    private String foodName, foodPic, foodDetail, foodPrice;
+    private String foodName, foodPic, foodPrice, foodDetail;
 
     public Foods() {}
 
-    public Foods(String foodName, String foodPrice, String foodPic, String foodDetail) {
+    public Foods(String foodName, String foodPic, String foodPrice, String foodDetail) {
         this.foodName = foodName;
-        this.foodPrice = foodPrice;
         this.foodPic = foodPic;
+        this.foodPrice = foodPrice;
         this.foodDetail = foodDetail;
     }
 
@@ -32,19 +32,19 @@ public class Foods {
         this.foodPic = foodPic;
     }
 
-    public String getFoodDetail() {
-        return foodDetail;
-    }
-
-    public void setFoodDetail(String foodDetail) {
-        this.foodDetail = foodDetail;
-    }
-
     public String getFoodPrice() {
         return foodPrice;
     }
 
     public void setFoodPrice(String foodPrice) {
         this.foodPrice = foodPrice;
+    }
+
+    public String getFoodDetail() {
+        return foodDetail;
+    }
+
+    public void setFoodDetail(String foodDetail) {
+        this.foodDetail = foodDetail;
     }
 }

@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Adapters;
+package com.bruce007tw.order.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bruce007tw.order.Model.Foods;
+import com.bruce007tw.order.models.Foods;
 
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;

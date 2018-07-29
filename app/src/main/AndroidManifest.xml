@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bruce007tw.order">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,21 +14,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.MainActivity">
+
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.FillActivity" />
-        <activity android:name=".Activities.MenuActivity" />
-        <activity android:name=".Activities.CartActivity" />
-        <activity android:name=".Activities.HistoryList" />
-        <activity android:name=".Activities.FoodDetail" />
-        <activity android:name=".Activities.FinishActivity" />
-        <activity android:name=".Activities.HistorySearch" />
-        <activity android:name=".Activities.HistoryDetail"></activity>
-    </application>
 
+        <activity android:name=".activities.FillActivity" />
+        <activity android:name=".activities.MenuActivity" />
+        <activity android:name=".activities.CartActivity" />
+        <activity android:name=".activities.HistoryList" />
+        <activity android:name=".activities.FoodDetail" />
+        <activity android:name=".activities.FinishActivity" />
+        <activity android:name=".activities.HistorySearch" />
+        <activity android:name=".activities.HistoryDetail">
+        </activity>
+
+    </application>
 </manifest>

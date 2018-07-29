@@ -56,4 +56,7 @@ dependencies {
 
     // StepView
     implementation 'com.github.baoyachi:StepView:1.9'
+
+    // SingleDateAndTimePicker
+    implementation 'com.github.florent37:singledateandtimepicker:2.0.6'
 }

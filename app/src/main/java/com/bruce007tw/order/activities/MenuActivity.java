@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Activities;
+package com.bruce007tw.order.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import com.baoyachi.stepview.HorizontalStepView;
 import com.baoyachi.stepview.bean.StepBean;
 
-import com.bruce007tw.order.Adapters.FoodRecyclerAdapter;
+import com.bruce007tw.order.adapters.FoodRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
@@ -58,10 +58,14 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
     private void Firestore() {
         mFirestore = FirebaseFirestore.getInstance();
 
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        mFirestore.setFirestoreSettings(settings);
+
         mQuery = mFirestore.collection("FoodMenu");
 
-        mAdapter = new FoodRecyclerAdapter(mQuery, this) {
-        };
+        mAdapter = new FoodRecyclerAdapter(mQuery, this) {};
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         menuRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -144,6 +148,7 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                         startActivity(new Intent(MenuActivity.this, FillActivity.class));
                         break;
                 }
+                finish();
                 return true;
             }
         });

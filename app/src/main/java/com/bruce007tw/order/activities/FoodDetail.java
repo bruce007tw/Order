@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Activities;
+package com.bruce007tw.order.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bruce007tw.order.Model.Foods;
+import com.bruce007tw.order.models.Foods;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 
-import com.bruce007tw.order.Room.OrderDatabase;
-import com.bruce007tw.order.Room.OrderEntity;
+import com.bruce007tw.order.room.OrderDatabase;
+import com.bruce007tw.order.room.OrderEntity;
 import com.bumptech.glide.Glide;
 
 import com.google.firebase.firestore.DocumentReference;

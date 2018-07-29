@@ -14,24 +14,56 @@
     <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/detailConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="96dp"
         android:padding="4dp">
+
+        <TextView
+            android:id="@+id/order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="訂餐："
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/historyOrderDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="ORDER DATE"
             android:textAlignment="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/order"
+            app:layout_constraintStart_toEndOf="@+id/order"
+            app:layout_constraintTop_toTopOf="@+id/order" />
+
+        <TextView
+            android:id="@+id/demand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="20dp"
+            android:text="取餐："
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/historyDemandTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="DEMAND TIME"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/demand"
+            app:layout_constraintStart_toEndOf="@+id/demand"
+            app:layout_constraintTop_toTopOf="@+id/demand" />
 
     </android.support.constraint.ConstraintLayout>
 

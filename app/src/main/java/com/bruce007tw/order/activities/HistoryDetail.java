@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Activities;
+package com.bruce007tw.order.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

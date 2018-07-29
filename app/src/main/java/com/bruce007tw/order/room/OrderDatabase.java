@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Room;
+package com.bruce007tw.order.room;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;

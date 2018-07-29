@@ -1,19 +1,20 @@
-package com.bruce007tw.order.Model;
+package com.bruce007tw.order.models;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Keywords {
 
-    private String name, phone, address, orderDate;
+    private String name, phone, address, orderDate, demandTime;
 
     public Keywords() {}
 
-    public Keywords(String name, String phone, String address, String orderDate) {
+    public Keywords(String name, String phone, String address, String orderDate, String demandTime) {
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.orderDate = orderDate;
+        this.demandTime = demandTime;
     }
 
     public String getName() {
@@ -46,5 +47,13 @@ public class Keywords {
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public String getDemandTime() {
+        return demandTime;
+    }
+
+    public void setDemandTime(String demandTime) {
+        this.demandTime = demandTime;
     }
 }

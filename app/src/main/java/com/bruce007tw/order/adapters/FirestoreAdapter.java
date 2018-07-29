@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Adapters;
+package com.bruce007tw.order.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

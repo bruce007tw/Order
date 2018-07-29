@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Activities;
+package com.bruce007tw.order.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

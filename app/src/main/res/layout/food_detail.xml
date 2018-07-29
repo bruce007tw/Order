@@ -6,7 +6,7 @@
     android:id="@+id/detailLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.FoodDetail">
+    tools:context=".activities.FoodDetail">
 
     <ImageView
         android:id="@+id/detailFoodPic"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/mcdelivery_new11"
+        app:srcCompat="@mipmap/hamburger"
         android:scaleType="fitCenter" />
 
     <android.support.v7.widget.CardView

@@ -1,4 +1,4 @@
-package com.bruce007tw.order.Adapters;
+package com.bruce007tw.order.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,8 +16,8 @@ import android.widget.Toast;
 
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
-import com.bruce007tw.order.Room.OrderDatabase;
-import com.bruce007tw.order.Room.OrderEntity;
+import com.bruce007tw.order.room.OrderDatabase;
+import com.bruce007tw.order.room.OrderEntity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -30,15 +31,20 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
 
     private static final String TAG = "CartRecyclerAdapter";
 
-    private OrderEntity orderEntity;
-    private OrderDatabase orderDatabase;
-    private List<OrderEntity> orderEntityList;
     private Context mContext;
-    private int foodID, quantity;
+    private OrderEntity orderEntity;
+    private List<OrderEntity> orderEntityList;
+    private OrderDatabase orderDatabase;
+    private String foodName, foodPic, foodPrice, foodDetail;
+    private int foodID, quantity, subtotal;
 
     public CartRecyclerAdapter(List<OrderEntity> orderEntityList, Context mContext) {
         this.orderEntityList = orderEntityList;
         this.mContext = mContext;
+    }
+
+    private void getOrderDatabase() {
+        orderDatabase = OrderDatabase.getDatabase(mContext);
     }
 
     @NonNull
@@ -51,22 +57,23 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull final CartHolder holder, final int position) {
 
+        getOrderDatabase();
+
         foodID = orderEntityList.get(position).getId();
+        foodName = orderEntityList.get(position).getFoodName();
+        foodPic = orderEntityList.get(position).getFoodPic();
+        foodPrice = orderEntityList.get(position).getFoodPrice();
+        foodDetail = orderEntityList.get(position).getFoodDetail();
         quantity = orderEntityList.get(position).getFoodQuantity();
 
-        orderEntity = new OrderEntity(foodID,
-                orderEntityList.get(position).getFoodName(),
-                orderEntityList.get(position).getFoodPic(),
-                orderEntityList.get(position).getFoodPrice(),
-                orderEntityList.get(position).getFoodDetail(),
-                quantity);
+        orderEntity = new OrderEntity(foodID, foodName, foodPic, foodPrice, foodDetail, quantity);
 
         Glide.with(mContext)
-             .load(orderEntityList.get(position).getFoodPic())
+             .load(foodPic)
              .apply(new RequestOptions().centerCrop())
              .into(holder.FoodImage);
 
-        holder.FoodName.setText(orderEntityList.get(position).getFoodName());
+        holder.FoodName.setText(foodName);
 
         holder.FoodQuantity.setText(String.valueOf(quantity));
 
@@ -77,9 +84,8 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
                 if (quantity < 10){
                     quantity++;
                     holder.FoodQuantity.setText(String.valueOf(quantity));
-                    orderDatabase = OrderDatabase.getDatabase(mContext);
-                    //orderEntity.setFoodQuantity(quantity);
-                    orderDatabase.orderDao().updateOrder(quantity, foodID);
+                    //orderDatabase.orderDao().updateOrder(quantity, foodID);
+                    orderDatabase.orderDao().update(orderEntity);
                 } else {
                     Toast.makeText(mContext, "單次點餐最多10份", Toast.LENGTH_SHORT).show();
                 }
@@ -93,9 +99,8 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
                 if (quantity > 1){
                     quantity--;
                     holder.FoodQuantity.setText(String.valueOf(quantity));
-                    orderDatabase = OrderDatabase.getDatabase(mContext);
-                    //orderEntity.setFoodQuantity(quantity);
-                    orderDatabase.orderDao().updateOrder(quantity, foodID);
+                    //orderDatabase.orderDao().updateOrder(quantity, foodID);
+                    orderDatabase.orderDao().update(orderEntity);
                 }
             }
         });
@@ -112,7 +117,7 @@ public class CartRecyclerAdapter extends RecyclerView.Adapter<CartRecyclerAdapte
                         .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                orderDatabase = OrderDatabase.getDatabase(mContext);
+                                //orderDatabase = OrderDatabase.getDatabase(mContext);
                                 orderDatabase.orderDao().deleteOrder(foodID);
                                 Toast.makeText(mContext, "刪除成功", Toast.LENGTH_SHORT).show();
 
