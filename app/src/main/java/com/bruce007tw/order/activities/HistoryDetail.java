@@ -18,7 +18,6 @@ public class HistoryDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_detail);
-        getSupportActionBar().hide();
 
         requestID = getIntent().getExtras().getString(REQUSET_ID);
         Log.d(TAG, "foodID：" + getIntent().getExtras().getString(REQUSET_ID));

@@ -36,7 +36,6 @@ public class HistorySearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_search);
-        getSupportActionBar().hide();
         ButterKnife.bind(this);
         Search();
         BackToMain();

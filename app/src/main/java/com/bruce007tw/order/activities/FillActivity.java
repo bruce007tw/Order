@@ -12,9 +12,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,8 +25,8 @@ import com.baoyachi.stepview.bean.StepBean;
 
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
-import com.bruce007tw.order.room.OrderDatabase;
 
+import com.bruce007tw.order.room.OrderDatabase;
 import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -82,7 +82,6 @@ public class FillActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill);
-        getSupportActionBar().hide();
         ButterKnife.bind(this);
         stepView();
         bottomBar();
@@ -93,10 +92,12 @@ public class FillActivity extends AppCompatActivity {
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
         mFirestore.setFirestoreSettings(settings);
+
+        // 取餐方式設定(在此才會於Activity啟動同時啟動RadioGroup)
+        method();
     }
 
     private void method() {
-        methodGroup.check(takeout.getId());
         methodGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -121,6 +122,7 @@ public class FillActivity extends AppCompatActivity {
         Date current = now.getTime();
 
         if (demand.before(current)) {
+            demandTime = "";
             Toast.makeText(FillActivity.this, "取餐時間請至少選擇30分鐘後", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -250,110 +252,14 @@ public class FillActivity extends AppCompatActivity {
                         phone = editPhone.getText().toString();
                         address = editAddr.getText().toString();
 
-                        // 取餐方式設定
-                        method();
-//                        methodGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//                            @Override
-//                            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                                if (checkedId == takeout.getId()){
-//                                    method = takeout.getText().toString();
-//                                }
-//                                else if (checkedId == delivery.getId()) {
-//                                    method = delivery.getText().toString();
-//                                }
-//                                Log.d(TAG, "取餐方式：" + method);
-//                            }
-//                        });
-
                         // 取餐時間設定
                         demandTime();
-//                        SimpleDateFormat dDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-//                        Date demand = demandDate.getDate();
-//
-//                        // 取得現在時間30分鐘後
-//                        Calendar now = Calendar.getInstance();
-//                        now.add(Calendar.MINUTE, 30);
-//                        Date current = now.getTime();
-//
-//                        if (demand.before(current)) {
-//                            Toast.makeText(FillActivity.this, "取餐時間請至少選擇30分鐘後", Toast.LENGTH_SHORT).show();
-//                        }
-//                        else {
-//                            demandTime = dDateFormat.format(demand);
-//                            Log.d(TAG, "取餐時間：" + demandTime);
-//                        }
 
                         // 取得系統時間
                         orderDate();
-//                        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//                        orderDate = sDateFormat.format(new java.util.Date());
-//                        Log.d(TAG, "點餐時間：" + orderDate);
 
                         // 執行上傳
-                        //uploadToFirebase();
-//                        if (name.matches("") || phone.matches("") || address.matches("") || method.matches("") || demandTime.matches("")) {
-//                            Toast toast = Toast.makeText(FillActivity.this, "請輸入完整資料", Toast.LENGTH_SHORT);
-//                            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-//                            toast.show();
-//                        }
-                        if (name!=null && phone!=null && address!=null && method!=null && demandTime!=null) {
-                            AlertDialog dialog = null;
-                            AlertDialog.Builder builder = null;
-                            builder = new AlertDialog.Builder(FillActivity.this);
-                            builder.setTitle("請確認資料是否填寫正確：")
-                                    .setMessage("\n訂購人：" + name + "\n聯絡電話：" + phone + "\n地址：" + address + "\n取餐方式：" + method + "\n取餐時間：" + demandTime)
-                                    .setPositiveButton("確認", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int i) {
-
-                                            // 對應輸入資料與Firebase資料欄位
-                                            Map<String, Object> clientMap = new HashMap<>();
-                                            clientMap.put("name", name);
-                                            clientMap.put("phone", phone);
-                                            clientMap.put("address", address);
-                                            clientMap.put("method", method);
-                                            clientMap.put("demandTime", demandTime);
-                                            clientMap.put("orderDate", orderDate);
-
-                                            // 上傳資料至Firebase/Requests(Collection)中並建立一個新的document
-                                            mFirestore.collection("Requests")
-                                                    .add(clientMap)
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentReference documentReference) {
-
-                                                            // 取得自動生成的Document ID
-                                                            String referenceID = documentReference.getId();
-                                                            SharedPreferences setting = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                                                            setting.edit().putString("referenceID", referenceID).apply();
-                                                            Log.d(TAG, "referenceID：" + referenceID);
-
-                                                            // 切換到餐點目錄
-                                                            startActivity(new Intent(FillActivity.this, MenuActivity.class));
-                                                            finish();
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.d(TAG, "Fill錯誤：" + e);
-                                                            String error = e.getMessage();
-                                                            Toast.makeText(FillActivity.this, "發生錯誤：" + error, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                        }
-                                    })
-                                    .setNegativeButton("更正", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int i) {
-                                        }
-                                    }).show();
-                        }
-                        else {
-                            Toast toast = Toast.makeText(FillActivity.this, "請輸入完整資料", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-                            toast.show();
-                        }
+                        uploadToFirebase();
 
                         break;
 

@@ -3,11 +3,11 @@
 
     <item
         android:id="@+id/action_choose"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@android:drawable/ic_menu_revert"
         android:title="選擇餐點" />
     <item
         android:id="@+id/action_send"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@android:drawable/ic_menu_send"
         android:title="送出訂單" />
 
 </menu>

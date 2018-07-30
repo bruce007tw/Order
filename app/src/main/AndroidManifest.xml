@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bruce007tw.order">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/catering_dish"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/catering_dish"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <activity android:name=".activities.MainActivity">
             <intent-filter>
@@ -22,7 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activities.FillActivity" />
         <activity android:name=".activities.MenuActivity" />
         <activity android:name=".activities.CartActivity" />
@@ -30,8 +33,7 @@
         <activity android:name=".activities.FoodDetail" />
         <activity android:name=".activities.FinishActivity" />
         <activity android:name=".activities.HistorySearch" />
-        <activity android:name=".activities.HistoryDetail">
-        </activity>
-
+        <activity android:name=".activities.HistoryDetail" />
+        <activity android:name=".activities.MapsActivity" />
     </application>
 </manifest>

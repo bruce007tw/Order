@@ -70,7 +70,6 @@ public class CartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-        getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
         Firestore();

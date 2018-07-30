@@ -15,6 +15,7 @@ import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 

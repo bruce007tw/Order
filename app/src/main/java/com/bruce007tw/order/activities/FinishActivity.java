@@ -33,7 +33,6 @@ public class FinishActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish);
-        getSupportActionBar().hide();
         ButterKnife.bind(this);
         backToMain();
         backToFill();

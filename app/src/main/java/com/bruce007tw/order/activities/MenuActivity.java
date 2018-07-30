@@ -47,7 +47,7 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
         Firestore();

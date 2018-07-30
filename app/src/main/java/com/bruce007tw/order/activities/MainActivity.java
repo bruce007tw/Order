@@ -1,59 +1,66 @@
 package com.bruce007tw.order.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.bruce007tw.order.R;
+import com.bruce007tw.order.R2;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottom_bar;
 
+    @BindView(R2.id.btnToOrder)
+    Button btnToOrder;
+
+    @BindView(R2.id.btnToHistory)
+    Button btnToHistory;
+
+    @BindView(R2.id.btnToMap)
+    Button btnToMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
-        bottomBar();
+        ButterKnife.bind(this);
+        order();
+        history();
+        map();
     }
 
-    private void bottomBar() {
-        bottom_bar = findViewById(R.id.bottom_bar);
-        bottom_bar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private void order() {
+        btnToOrder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_order :
-                        startActivity(new Intent(MainActivity.this, FillActivity.class));
-                        break;
-                    case R.id.action_history :
-                        startActivity(new Intent(MainActivity.this, HistorySearch.class));
-                        break;
-                    case  R.id.action_exit :
-                        AlertDialog dialog = null;
-                        AlertDialog.Builder builder = null;
-                        builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("警告")
-                                .setMessage("確定離開?")
-                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int i) {
-                                        System.exit(0);
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int i) {
-                                    }
-                                }).show();
-                }
-                return true;
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, FillActivity.class));
+                finish();
+            }
+        });
+    }
+
+    private void history() {
+        btnToHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, HistorySearch.class));
+                finish();
+            }
+        });
+    }
+
+    private void map() {
+        btnToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
             }
         });
     }

@@ -3,11 +3,11 @@
 
     <item
         android:id="@+id/action_redo"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@android:drawable/ic_menu_rotate"
         android:title="重新查詢" />
     <item
         android:id="@+id/action_main"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="回主畫面" />
 
 </menu>

@@ -72,7 +72,6 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_detail);
-        getSupportActionBar().hide();
         ButterKnife.bind(this);
         setQuantity();
         AddToCart();

@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -16,10 +15,7 @@ import com.bruce007tw.order.adapters.HistoryRecyclerAdapter;
 import com.bruce007tw.order.models.Keywords;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -54,7 +50,6 @@ public class HistoryList extends AppCompatActivity implements HistoryRecyclerAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_list);
-        getSupportActionBar().hide();
         ButterKnife.bind(this);
         Firestore();
         bottomBar();
