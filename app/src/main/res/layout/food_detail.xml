@@ -15,17 +15,12 @@
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/hamburger" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/detailCardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="24dp"
                 android:text="FoodName"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +47,13 @@
                 android:id="@+id/detailFoodPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
-                android:text="FoodPrice"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView6"
-                app:layout_constraintStart_toEndOf="@+id/textView6" />
+                android:text="NT. 9999"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@+id/detailFoodName"
+                app:layout_constraintTop_toBottomOf="@+id/detailFoodName" />
 
             <TextView
                 android:id="@+id/detailFoodDetail"
@@ -68,10 +63,10 @@
                 android:layout_marginTop="12dp"
                 android:lineSpacingExtra="4sp"
                 android:text="Favourite meals from worldly cuisines- find the version of a recipe to suit you. Baked potato. Perfect your spud technique then pile our filling ideas high. Burger. Casserole. Chicken salad. Crumble. Curry. Fish pie. Frittata."
-                android:textSize="16sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/detailQuantity"
                 app:layout_constraintEnd_toEndOf="@+id/detailAddBtn"
-                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintStart_toStartOf="@+id/detailFoodPrice"
                 app:layout_constraintTop_toBottomOf="@+id/detailFoodPrice" />
 
             <Button
@@ -83,7 +78,7 @@
                 android:layout_marginStart="32dp"
                 android:background="@android:color/holo_blue_light"
                 android:gravity="center"
-                android:padding="18dp"
+                android:padding="16dp"
                 android:text="加入購物車"
                 android:textColor="@android:color/background_light"
                 android:textSize="18sp"
@@ -95,7 +90,7 @@
                 android:id="@+id/detailMinus"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="36dp"
+                android:layout_marginStart="32dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="@+id/detailQuantity"
@@ -107,7 +102,7 @@
                 android:id="@+id/detailPlus"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="36dp"
+                android:layout_marginEnd="32dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="@+id/detailQuantity"
@@ -124,23 +119,11 @@
                 android:layout_marginStart="8dp"
                 android:text="1"
                 android:textAlignment="center"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/detailAddBtn"
                 app:layout_constraintEnd_toStartOf="@+id/detailPlus"
                 app:layout_constraintHorizontal_bias="0.503"
                 app:layout_constraintStart_toEndOf="@+id/detailMinus" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:text="NT."
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/detailFoodName"
-                app:layout_constraintTop_toBottomOf="@+id/detailFoodName" />
 
         </android.support.constraint.ConstraintLayout>
 

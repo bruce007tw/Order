@@ -13,8 +13,10 @@ import com.bruce007tw.order.models.Foods;
 
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
+
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -23,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.FoodHolder> {
+
     private static final String TAG = "FoodRecyclerAdapter";
 
     public interface onFoodSelectedListener {
@@ -45,12 +48,27 @@ public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.Fo
 
     @Override
     public void onBindViewHolder(@NonNull FoodHolder holder, int position) {
-        DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
+        final DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
         Foods foods = documentSnapshot.toObject(Foods.class);
 
         Log.d(TAG, "呼叫 onBindViewHolder");
 
-        holder.bind(getSnapshot(position), mListener);
+        Glide.with(holder.FoodImage.getContext())
+                .load(foods.getFoodPic())
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate())
+                .into(holder.FoodImage);
+
+        holder.FoodName.setText(foods.getFoodName());
+        holder.FoodPrice.setText(String.valueOf("NT. " + foods.getFoodPrice()));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onFoodSelected(documentSnapshot);
+                }
+            }
+        });
     }
 
     @Override
@@ -72,26 +90,6 @@ public class FoodRecyclerAdapter extends FirestoreAdapter<FoodRecyclerAdapter.Fo
         public FoodHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-
-        public void bind (final DocumentSnapshot documentSnapshot, final onFoodSelectedListener mListener) {
-            Foods foods = documentSnapshot.toObject(Foods.class);
-
-            Glide.with(FoodImage.getContext())
-                 .load(foods.getFoodPic())
-                 .into(FoodImage);
-
-            FoodName.setText(foods.getFoodName());
-            FoodPrice.setText(foods.getFoodPrice());
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                    mListener.onFoodSelected(documentSnapshot);
-                    }
-                }
-            });
         }
     }
 }

@@ -1,10 +1,13 @@
 package com.bruce007tw.order.activities;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,16 +26,16 @@ import com.baoyachi.stepview.bean.StepBean;
 import com.bruce007tw.order.adapters.CartRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
-
 import com.bruce007tw.order.room.OrderDatabase;
 import com.bruce007tw.order.room.OrderEntity;
+import com.bruce007tw.order.room.OrderViewModel;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
+
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,24 +51,26 @@ public class CartActivity extends AppCompatActivity {
 
     private static final String TAG = "CartActivity";
 
-    private HorizontalStepView step_view;
-    private BottomNavigationView bottom_bar;
-
     private FirebaseFirestore mFirestore;
-    private CollectionReference mReference;
     private CartRecyclerAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private Query mQuery;
-
+    private List<OrderEntity> orderEntityList;
     private OrderDatabase orderDatabase;
-    private List<OrderEntity> orderEntityList = new ArrayList<>();
-    private int subtotal, total;
+    private int total;
 
     @BindView(R2.id.cartRecyclerView)
     RecyclerView cartRecyclerView;
 
     @BindView(R2.id.cartTotal)
     TextView cartTotal;
+
+    @BindView(R2.id.step_view)
+    HorizontalStepView step_view;
+
+    @BindView(R2.id.bottom_bar)
+    BottomNavigationView bottom_bar;
+
+    @BindView(R2.id.emptyCart)
+    TextView emptyCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +80,6 @@ public class CartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Firestore();
         selectedFood();
-        totalPrice();
         stepView();
         bottomBar();
     }
@@ -86,41 +91,41 @@ public class CartActivity extends AppCompatActivity {
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
         mFirestore.setFirestoreSettings(settings);
-
-        mReference = mFirestore.collection("FoodMenu");
-
-        mQuery = mFirestore.collection("FoodMenu");
-
-        cartRecyclerView.setHasFixedSize(true);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        cartRecyclerView.setLayoutManager(mLinearLayoutManager);
-    }
-
-    private void getOrderDatabase() {
-        orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
     }
 
     private void selectedFood() {
-        getOrderDatabase();
-        orderEntityList = orderDatabase.orderDao().getAll();
-        mAdapter = new CartRecyclerAdapter(orderEntityList, this);
+        orderDatabase = OrderDatabase.getDatabase(CartActivity.this);
+        mAdapter = new CartRecyclerAdapter(orderEntityList, orderDatabase,this);
+        cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         cartRecyclerView.setAdapter(mAdapter);
-    }
 
-    private void totalPrice() {
-        for (int position=0; position<=orderEntityList.size()-1; position++) {
-            String price = orderEntityList.get(position).getFoodPrice();
-            int quantity = orderEntityList.get(position).getFoodQuantity();
-            int subtotal = (Integer.parseInt(price))*quantity;
-            total = total + subtotal;
-            Log.d(TAG, "totalPrice: " + total);
-        }
+        OrderViewModel orderViewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
+        orderViewModel.getOrderList().observe(this, new Observer<List<OrderEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<OrderEntity> orders) {
+                orderEntityList = orders;
+                mAdapter.addItems(orders);
 
-        cartTotal.setText(String.valueOf(total));
+                // 計算總價
+                total = 0;
+                for (OrderEntity orderCart: orderEntityList) {
+                    total += orderCart.getFoodPrice()*orderCart.getFoodQuantity();
+                }
+
+                // 判斷購物車是否有東西
+                if (total == 0) {
+                    cartRecyclerView.setVisibility(View.INVISIBLE);
+                    cartTotal.setVisibility(View.INVISIBLE);
+                    emptyCart.setVisibility(View.VISIBLE);
+                }
+                else {
+                    cartTotal.setText("金額總計：NT. " + String.valueOf(total));
+                }
+            }
+        });
     }
 
     private void stepView() {
-        step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
         StepBean stepBean0 = new StepBean("設定",1);
         StepBean stepBean1 = new StepBean("目錄",1);
@@ -160,22 +165,18 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void bottomBar() {
-        bottom_bar = findViewById(R.id.bottom_bar);
         bottom_bar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_send :
-                        if (orderEntityList != null) {
-                            AlertDialog dialog = null;
-                            AlertDialog.Builder builder = null;
-                            builder = new AlertDialog.Builder(CartActivity.this);
-                            builder.setTitle("確認餐點無誤?")
-                                    //.setMessage("確認餐點無誤?")
+                        if (orderEntityList.size() > 0) {
+                            new AlertDialog.Builder(CartActivity.this)
+                                    .setTitle("確認餐點無誤?")
                                     .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            // 取得先前生成Document的ID
+                                            // 取得先前生成Document ID
                                             String clientID = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                                                     .getString("referenceID", "");
 
@@ -185,9 +186,9 @@ public class CartActivity extends AppCompatActivity {
                                                 // 對應購物資料與Firebase資料欄位
                                                 int foodID = orderEntityList.get(position).getId();
                                                 String name = orderEntityList.get(position).getFoodName();
-                                                String price = orderEntityList.get(position).getFoodPrice();
+                                                int price = orderEntityList.get(position).getFoodPrice();
                                                 int quantity = orderEntityList.get(position).getFoodQuantity();
-                                                int subtotal = (Integer.parseInt(price))*quantity;
+                                                int subtotal = price*quantity;
 
                                                 // 對應輸入資料與Firebase資料欄位
                                                 Map<String, Object> orderMap = new HashMap<>();
@@ -229,11 +230,8 @@ public class CartActivity extends AppCompatActivity {
                         }
                         else {
                             // 未選擇餐點警告跳窗
-                            AlertDialog dialog = null;
-                            AlertDialog.Builder builder = null;
-                            builder = new AlertDialog.Builder(CartActivity.this);
-                            builder.setTitle("警告")
-                                    .setMessage("請先選擇餐點")
+                            new AlertDialog.Builder(CartActivity.this)
+                                    .setTitle("請先選擇餐點")
                                     .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int i) {

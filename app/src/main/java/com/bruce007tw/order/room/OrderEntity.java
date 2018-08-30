@@ -18,21 +18,21 @@ public class OrderEntity {
     @ColumnInfo(name="foodPic")
     private String foodPic;
 
-    @ColumnInfo(name = "foodPrice")
-    private String foodPrice;
-
     @ColumnInfo(name="foodDetail")
     private String foodDetail;
+
+    @ColumnInfo(name = "foodPrice")
+    private int foodPrice;
 
     @ColumnInfo(name="foodQuantity")
     private int foodQuantity;
 
-    public OrderEntity(int id, String foodName, String foodPic, String foodPrice, String foodDetail, int foodQuantity) {
+    public OrderEntity(int id, String foodName, String foodPic, String foodDetail, int foodPrice, int foodQuantity) {
         this.id = id;
         this.foodName = foodName;
         this.foodPic = foodPic;
-        this.foodPrice = foodPrice;
         this.foodDetail = foodDetail;
+        this.foodPrice = foodPrice;
         this.foodQuantity = foodQuantity;
     }
 
@@ -60,20 +60,20 @@ public class OrderEntity {
         this.foodPic = foodPic;
     }
 
-    public String getFoodPrice() {
-        return foodPrice;
-    }
-
-    public void setFoodPrice(String foodPrice) {
-        this.foodPrice = foodPrice;
-    }
-
     public String getFoodDetail() {
         return foodDetail;
     }
 
     public void setFoodDetail(String foodDetail) {
         this.foodDetail = foodDetail;
+    }
+
+    public int getFoodPrice() {
+        return foodPrice;
+    }
+
+    public void setFoodPrice(int foodPrice) {
+        this.foodPrice = foodPrice;
     }
 
     public int getFoodQuantity() {

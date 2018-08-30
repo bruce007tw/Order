@@ -11,40 +11,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bruce007tw.order.adapters.HistoryRecyclerAdapter;
-import com.bruce007tw.order.models.Keywords;
+import com.bruce007tw.order.adapters.HistoryListRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
+
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HistoryList extends AppCompatActivity implements HistoryRecyclerAdapter.onHistorySelectedListener{
+public class HistoryList extends AppCompatActivity implements HistoryListRecyclerAdapter.onHistorySelectedListener{
 
     private static final String TAG = "HistoryList";
-    private static final String REQUEST_ID = "request_id";
 
-    private BottomNavigationView bottom_bar;
-    private FirebaseFirestore mFirestore;
-    private HistoryRecyclerAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private Query mQuery;
-    private List<Keywords> searchResults = new ArrayList<>();
+    private HistoryListRecyclerAdapter mAdapter;
 
     @BindView(R2.id.historyRecyclerView)
     RecyclerView historyRecyclerView;
 
     @BindView(R2.id.noHistory)
     TextView noHistory;
+
+    @BindView(R2.id.bottom_bar)
+    BottomNavigationView bottom_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +50,28 @@ public class HistoryList extends AppCompatActivity implements HistoryRecyclerAda
         bottomBar();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(HistoryList.this, HistorySearch.class));
+        finish();
+    }
+
     private void Firestore() {
 
         Bundle search = this.getIntent().getExtras();
         final String name = search.getString("name");
         final String phone = search.getString("phone");
 
-        mFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
         mFirestore.setFirestoreSettings(settings);
 
-        mQuery = mFirestore.collection("Requests")
+        Query mQuery = mFirestore.collection("Requests")
+                .orderBy("orderDate", Query.Direction.DESCENDING)
                 .whereEqualTo("name", name)
                 .whereEqualTo("phone", phone);
 
@@ -84,7 +87,6 @@ public class HistoryList extends AppCompatActivity implements HistoryRecyclerAda
                             if (fName.equals(name)) {
                                 if (fPhone.equals(phone)) {
                                     isExisting = true;
-                                    Keywords keywords = snapshot.toObject(Keywords.class);
                                 }
                             }
                         }
@@ -96,9 +98,8 @@ public class HistoryList extends AppCompatActivity implements HistoryRecyclerAda
                     }
                 });
 
-        mAdapter = new HistoryRecyclerAdapter(mQuery, this){};
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        historyRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mAdapter = new HistoryListRecyclerAdapter(mQuery, this){};
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         historyRecyclerView.setAdapter(mAdapter);
     }
 
@@ -120,13 +121,12 @@ public class HistoryList extends AppCompatActivity implements HistoryRecyclerAda
 
     @Override
     public void onHistorySelected(DocumentSnapshot firebaseFood) {
-//        Intent intent = new Intent(this, HistoryDetail.class);
-//        intent.putExtra(HistoryDetail.REQUSET_ID, firebaseFood.getId());
-//        startActivity(intent);
+        Intent intent = new Intent(this, HistoryDetail.class);
+        intent.putExtra(HistoryDetail.REQUSET_ID, firebaseFood.getId());
+        startActivity(intent);
     }
 
     private void bottomBar() {
-        bottom_bar = findViewById(R.id.bottom_bar);
         bottom_bar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

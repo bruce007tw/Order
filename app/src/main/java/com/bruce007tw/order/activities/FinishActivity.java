@@ -21,13 +21,14 @@ import butterknife.ButterKnife;
 
 public class FinishActivity extends AppCompatActivity {
 
-    private HorizontalStepView step_view;
-
     @BindView(R2.id.btnToMain)
     Button btnToMain;
 
     @BindView(R2.id.btnToFill)
     Button btnToFill;
+
+    @BindView(R2.id.step_view)
+    HorizontalStepView step_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,13 @@ public class FinishActivity extends AppCompatActivity {
         backToMain();
         backToFill();
         stepView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(FinishActivity.this, MainActivity.class));
+        finish();
     }
 
     private void backToMain() {
@@ -60,7 +68,6 @@ public class FinishActivity extends AppCompatActivity {
     }
 
     private void stepView() {
-        step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
         StepBean stepBean0 = new StepBean("設定",1);
         StepBean stepBean1 = new StepBean("目錄",1);

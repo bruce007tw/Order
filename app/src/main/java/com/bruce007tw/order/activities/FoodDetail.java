@@ -14,10 +14,13 @@ import android.widget.Toast;
 import com.bruce007tw.order.models.Foods;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
-
 import com.bruce007tw.order.room.OrderDatabase;
 import com.bruce007tw.order.room.OrderEntity;
+
 import com.bumptech.glide.Glide;
+
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,7 +37,6 @@ import butterknife.ButterKnife;
 public class FoodDetail extends AppCompatActivity implements EventListener<DocumentSnapshot>{
 
     private static final String TAG = "FoodDetail";
-
     public static final String KEY_FOOD_ID = "key_food_id";
 
     private FirebaseFirestore mFirestore;
@@ -73,9 +75,12 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
         super.onCreate(savedInstanceState);
         setContentView(R.layout.food_detail);
         ButterKnife.bind(this);
+        Firestore();
         setQuantity();
         AddToCart();
+    }
 
+    private void Firestore() {
         foodID = getIntent().getExtras().getString(KEY_FOOD_ID);
         Log.d(TAG, "foodID：" + getIntent().getExtras().getString(KEY_FOOD_ID));
 
@@ -119,11 +124,12 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
 
         Glide.with(this)
                 .load(currentFood.getFoodPic())
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate())
                 .into(detailFoodPic);
         Log.d(TAG, "圖片：" + currentFood.getFoodPic());
 
         detailFoodName.setText(currentFood.getFoodName());
-        detailFoodPrice.setText(currentFood.getFoodPrice());
+        detailFoodPrice.setText("NT. " + String.valueOf(currentFood.getFoodPrice()));
         detailFoodDetail.setText(currentFood.getFoodDetail());
     }
 
@@ -158,13 +164,17 @@ public class FoodDetail extends AppCompatActivity implements EventListener<Docum
                 OrderEntity orderEntity = new OrderEntity(Integer.parseInt(foodID),
                         currentFood.getFoodName(),
                         currentFood.getFoodPic(),
-                        currentFood.getFoodPrice(),
                         currentFood.getFoodDetail(),
+                        currentFood.getFoodPrice(),
                         quantity);
+
                 OrderDatabase.getDatabase(getApplicationContext()).orderDao().addOrder(orderEntity);
+
                 Log.d(TAG, "購物車：" + orderEntity);
+
                 Toast.makeText(getApplicationContext(), "新增成功", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(FoodDetail.this, MenuActivity.class));
+                finish();
             }
         });
     }

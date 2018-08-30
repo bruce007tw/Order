@@ -2,6 +2,7 @@ package com.bruce007tw.order.room;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -13,23 +14,17 @@ import java.util.List;
 public interface OrderDao {
 
     @Query("SELECT * FROM OrderEntity")
-    List<OrderEntity> getAll();
+    LiveData<List<OrderEntity>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addOrder(OrderEntity orderEntity);
 
-//    @Query("UPDATE OrderEntity SET foodQuantity=:foodQuantity WHERE id=:id")
-//    void updateOrder(int foodQuantity, int id);
+    @Update
+    void update(OrderEntity orderEntity);
 
-    @Query("UPDATE OrderEntity SET foodQuantity=:foodQuantity WHERE id=:id")
-    void updateOrder(int foodQuantity, int id);
-
-    @Query("DELETE FROM OrderEntity WHERE id=:id")
-    void deleteOrder(int id);
+    @Delete
+    int deleteOrder(OrderEntity orderEntity);
 
     @Query("DELETE FROM OrderEntity")
     void nukeOrder();
-
-    @Update
-    void update(OrderEntity orderEntity);
 }

@@ -1,5 +1,8 @@
 package com.bruce007tw.order.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.baoyachi.stepview.HorizontalStepView;
@@ -17,6 +21,9 @@ import com.baoyachi.stepview.bean.StepBean;
 import com.bruce007tw.order.adapters.FoodRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,28 +36,32 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.bruce007tw.order.activities.FillActivity.PREFS_NAME;
+
 public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapter.onFoodSelectedListener {
 
     private static final String TAG = "MenuActivity";
 
-    private HorizontalStepView step_view;
-    private BottomNavigationView bottom_bar;
     private FirebaseFirestore mFirestore;
     private FoodRecyclerAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private Query mQuery;
 
     @BindView(R2.id.menuRecyclerView)
     RecyclerView menuRecyclerView;
+
+    @BindView(R2.id.step_view)
+    HorizontalStepView step_view;
+
+    @BindView(R2.id.bottom_bar)
+    BottomNavigationView bottom_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        //getSupportActionBar().hide();
         Log.d(TAG, "onCreate: Activity啟動.");
         ButterKnife.bind(this);
         Firestore();
+        FoodMenu();
         StepView();
         BottomBar();
     }
@@ -62,13 +73,12 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
         mFirestore.setFirestoreSettings(settings);
+    }
 
-        mQuery = mFirestore.collection("FoodMenu");
-
+    private void FoodMenu() {
+        Query mQuery = mFirestore.collection("FoodMenu");
         mAdapter = new FoodRecyclerAdapter(mQuery, this) {};
-
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        menuRecyclerView.setLayoutManager(mLinearLayoutManager);
+        menuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         menuRecyclerView.setAdapter(mAdapter);
     }
 
@@ -96,7 +106,6 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
     }
 
     private void StepView() {
-        step_view = findViewById(R.id.step_view);
         List<StepBean> stepsBeanList = new ArrayList<>();
         StepBean stepBean0 = new StepBean("設定",1);
         StepBean stepBean1 = new StepBean("目錄",0);
@@ -136,21 +145,91 @@ public class MenuActivity extends AppCompatActivity implements FoodRecyclerAdapt
     }
 
     private void BottomBar() {
-        bottom_bar = findViewById(R.id.bottom_bar);
         bottom_bar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_next :
                         startActivity(new Intent(MenuActivity.this, CartActivity.class));
+                        finish();
                         break;
                     case R.id.action_back :
-                        startActivity(new Intent(MenuActivity.this, FillActivity.class));
+                        new AlertDialog.Builder(MenuActivity.this)
+                                .setTitle("重新填寫資料?")
+                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+
+                                        // 刪除空訂單
+                                        bundle();
+
+                                        startActivity(new Intent(MenuActivity.this, FillActivity.class));
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                    }
+                                }).show();
                         break;
                 }
-                finish();
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return customeBackKey();
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    private boolean customeBackKey() {
+        new AlertDialog.Builder(MenuActivity.this)
+                .setTitle("重新填寫資料?")
+                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+
+                        // 刪除空訂單
+                        bundle();
+
+                        startActivity(new Intent(MenuActivity.this, FillActivity.class));
+                        finish();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                    }
+                }).show();
+        return true;
+    }
+
+    private void bundle() {
+
+        Firestore();
+
+        // 取得先前生成Document ID
+        String fillID = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getString("referenceID", "");
+
+        mFirestore.collection("Requests").document(fillID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "空訂單刪除成功");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "空訂單刪除失敗");
+                    }
+                });
     }
 }

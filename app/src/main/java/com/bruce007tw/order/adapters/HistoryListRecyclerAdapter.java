@@ -11,13 +11,14 @@ import android.widget.TextView;
 import com.bruce007tw.order.models.Keywords;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HistoryRecyclerAdapter extends FirestoreAdapter<HistoryRecyclerAdapter.HistoryHolder> {
+public class HistoryListRecyclerAdapter extends FirestoreAdapter<HistoryListRecyclerAdapter.HistoryHolder> {
 
     private static final String TAG = "HistoryRecyclerViewAdap";
 
@@ -27,7 +28,7 @@ public class HistoryRecyclerAdapter extends FirestoreAdapter<HistoryRecyclerAdap
 
     private onHistorySelectedListener mListener;
 
-    public HistoryRecyclerAdapter(Query mQuery, onHistorySelectedListener mListener) {
+    public HistoryListRecyclerAdapter(Query mQuery, onHistorySelectedListener mListener) {
         super(mQuery);
         this.mListener = mListener;
     }
@@ -41,12 +42,22 @@ public class HistoryRecyclerAdapter extends FirestoreAdapter<HistoryRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull HistoryHolder holder, int position) {
-        DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
+        final DocumentSnapshot documentSnapshot = mDocumentSnapshot.get(position);
         Keywords keywords = documentSnapshot.toObject(Keywords.class);
+
         Log.d(TAG, "呼叫 onBindViewHolder");
 
         holder.orderDate.setText(keywords.getOrderDate());
         holder.demandTime.setText(keywords.getDemandTime());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onHistorySelected(documentSnapshot);
+                }
+            }
+        });
     }
 
     @Override

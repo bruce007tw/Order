@@ -16,8 +16,6 @@ import butterknife.ButterKnife;
 
 public class HistorySearch extends AppCompatActivity {
 
-    private static final String TAG = "HistorySearch";
-
     private String name, phone;
 
     @BindView(R2.id.searchName)
@@ -39,6 +37,13 @@ public class HistorySearch extends AppCompatActivity {
         ButterKnife.bind(this);
         Search();
         BackToMain();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(HistorySearch.this, MainActivity.class));
+        finish();
     }
 
     public void Search() {
