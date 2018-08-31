@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bruce007tw.order.adapters.HistoryListRecyclerAdapter;
 import com.bruce007tw.order.R;
 import com.bruce007tw.order.R2;
+import com.bruce007tw.order.models.Keywords;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -31,6 +32,7 @@ public class HistoryList extends AppCompatActivity implements HistoryListRecycle
     private static final String TAG = "HistoryList";
 
     private HistoryListRecyclerAdapter mAdapter;
+    private FirebaseFirestore mFirestore;
 
     @BindView(R2.id.historyRecyclerView)
     RecyclerView historyRecyclerView;
@@ -63,7 +65,7 @@ public class HistoryList extends AppCompatActivity implements HistoryListRecycle
         final String name = search.getString("name");
         final String phone = search.getString("phone");
 
-        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
@@ -71,9 +73,9 @@ public class HistoryList extends AppCompatActivity implements HistoryListRecycle
         mFirestore.setFirestoreSettings(settings);
 
         Query mQuery = mFirestore.collection("Requests")
-                .orderBy("orderDate", Query.Direction.DESCENDING)
                 .whereEqualTo("name", name)
-                .whereEqualTo("phone", phone);
+                .whereEqualTo("phone", phone)
+                .orderBy("orderDate", Query.Direction.DESCENDING);
 
         mQuery.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -89,11 +91,12 @@ public class HistoryList extends AppCompatActivity implements HistoryListRecycle
                                     isExisting = true;
                                 }
                             }
+
                         }
                         // 無匹配結果
                         if (!isExisting) {
-                            historyRecyclerView.setVisibility(View.INVISIBLE);
                             noHistory.setVisibility(View.VISIBLE);
+                            historyRecyclerView.setVisibility(View.INVISIBLE);
                         }
                     }
                 });

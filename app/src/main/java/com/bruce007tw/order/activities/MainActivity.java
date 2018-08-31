@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        finishAndRemoveTask();
                         Intent intent = new Intent(Intent.ACTION_MAIN);
                         intent.addCategory(Intent.CATEGORY_HOME);
                         startActivity(intent);
+
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
